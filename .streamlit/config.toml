@@ -1,0 +1,5 @@
+[browser]
+
+# Whether to send usage statistics to Streamlit.
+# Default: true
+gatherUsageStats = true
