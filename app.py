@@ -1,3 +1,5 @@
+# run with "streamlit run app.py"
+
 import streamlit as st
 import openmc
 import matplotlib.pyplot as plt
@@ -9,7 +11,7 @@ st.write(
 """
 )
 
-geometry_code = st.text_area("Enter multiline text",
+geometry_code = st.text_area("Edit the text box below to define the universe to plot",
     height=300,
     value=(
         'surface_1 = openmc.Sphere(r=100)\n'
@@ -34,6 +36,8 @@ if geometry_code is not None:
         y_width = bb[0][1] - bb[1][1]
         z_width = bb[0][2] - bb[1][2]
 
+        # TODO add an offset to slice using origin arg
+        # https://github.com/openmc-dev/openmc/blob/765df9115f58624bd77c6304435c4f5166df67be/openmc/universe.py#L273
         plt = universe.plot(width=(x_width,z_width), basis='xz')
         plt.figure.savefig('xz.png')
         st.image('xz.png', use_column_width='always')
