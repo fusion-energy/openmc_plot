@@ -32,10 +32,6 @@ if geometry_code is not None:
         
         bb = universe.bounding_box
 
-        x_width = bb[0][0] - bb[1][0]
-        y_width = bb[0][1] - bb[1][1]
-        z_width = bb[0][2] - bb[1][2]
-        
         option = st.selectbox(
             label='Axis basis',
             options=('XZ', 'XY', 'YZ'),
@@ -63,20 +59,51 @@ if geometry_code is not None:
             value=float((bb[0][2]+bb[1][2])/2)
         )
 
-        # TODO add an offset to slice using origin arg
-        # https://github.com/openmc-dev/openmc/blob/765df9115f58624bd77c6304435c4f5166df67be/openmc/universe.py#L273
-
+        x_width = abs(bb[0][0] - bb[1][0])
+        y_width = abs(bb[0][1] - bb[1][1])
+        z_width = abs(bb[0][2] - bb[1][2])
+        
         if option == 'XZ':
-            width=(x_width,z_width)
+            plot_width_bb = x_width
+            plot_height_bb = z_width
+            xlabel = 'X [cm]'
+            ylabel = 'Z [cm]'
         elif option == 'XY':
-            width=(x_width,y_width)
+            plot_width_bb = x_width
+            plot_height_bb = y_width
+            xlabel = 'X [cm]'
+            ylabel = 'Y [cm]'
         elif option == 'YZ':
-            width=(y_width,z_width)
+            plot_width_bb = y_width
+            plot_height_bb = z_width
+            xlabel = 'Y [cm]'
+            ylabel = 'Z [cm]'
 
+        plot_width = st.number_input(
+            label='Plot width (cm)',
+            min_value=1.,
+            step=1.,
+            value=plot_width_bb,
+        )
+
+        plot_height = st.number_input(
+            label='Plot height (cm)',
+            min_value=1.,
+            step=1.,
+            value=plot_height_bb,
+        )
+        base_plot=plt.axes(xlabel=xlabel, ylabel=ylabel)
+        aspect_ratio = plot_width / plot_height
+        pixels_width = 1000
+        pixels_height = int(1000 / aspect_ratio)
+        print('pixels_width',pixels_width)
+        print('pixels_height',pixels_height)
         plt = universe.plot(
-            width=width,
+            width=(plot_width, plot_height),
             basis=option.lower(),
-            origin=(x_offset, y_offset, z_offset)
+            origin=(x_offset, y_offset, z_offset),
+            axes=base_plot,
+            pixels=(pixels_width, pixels_height)
         )
         plt.figure.savefig('image.png')
         st.image('image.png', use_column_width='always')
