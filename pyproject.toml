@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "openmc_data"
+name = "openmc_plot"
 authors = [
   { name="Jonathan Shimwell", email="mail@jshimwell.com" },
 ]
@@ -38,8 +38,8 @@ tests = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/fusion-energy/openmc_data"
-"Bug Tracker" = "https://github.com/fusion-energy/openmc_data/issues"
+"Homepage" = "https://github.com/fusion-energy/openmc_plot"
+"Bug Tracker" = "https://github.com/fusion-energy/openmc_plot/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
