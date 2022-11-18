@@ -1,0 +1,48 @@
+[build-system]
+requires = [
+    "setuptools >= 65.5.0",
+    "setuptools_scm[toml] >= 7.0.5",
+]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "openmc_data"
+authors = [
+  { name="Jonathan Shimwell", email="mail@jshimwell.com" },
+]
+license = {file = "LICENSE"}
+description = "A Python package containing a collection of scripts for producing and downloading data for OpenMC"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["openmc", "plot"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "streamlit==1.14.1",
+]
+dynamic = ["version"]
+
+
+[tool.setuptools_scm]
+write_to = "src/openmc_plot/_version.py"
+
+
+[project.optional-dependencies]
+tests = [
+    "pytest",
+    "requests"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/fusion-energy/openmc_data"
+"Bug Tracker" = "https://github.com/fusion-energy/openmc_data/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[project.scripts]
+openmc_plot = "openmc_plot.launch:main"
