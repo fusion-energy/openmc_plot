@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 *.png
+src/openmc_plot/_version.py
