@@ -4,9 +4,28 @@ This repository contains part of the source code for the OpenMC geometry plottin
 
 This repository contains:
 - A Python [Streamlit](https://streamlit.io) based GUI 🐍
-- A Dockerfile that provides the hosting environment 🐳
+- A Dockerfile that provides the hosting environment for the web app 🐳
 
-# Run locally
+
+# Install
+
+OpenMC_plot can be install directly from PyPi using pip.
+
+```
+pip install openmc_plot
+```
+
+# Usage
+
+In the terminal type ...
+
+```
+openmc_plot
+```
+
+Your default web browser should then load with the GUI.
+
+# Run web app locally
 
 You can view the hosted version of this repository here [xsplot.com](http://xsplot.com). However you might want to host your own version locally.
 
@@ -34,7 +53,6 @@ docker run --network host -t openmc_plot
 ```
 
 The URL of your locally hosted version should appear in the terminal, copy and paste this URL into a web browser address bar.
-
 
 # Maintenance
 
