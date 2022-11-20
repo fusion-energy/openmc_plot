@@ -82,8 +82,6 @@ def main():
             
             my_geometry = openmc.Geometry.from_xml(materials=my_mats)
             my_universe = my_geometry.root_universe
-
-            my_colors=None
             
             bb = my_universe.bounding_box
 
@@ -159,7 +157,26 @@ def main():
                 min_value=10,
                 value=1500
             )
-            # pixels_width = 1500
+            my_colors=None
+            
+            color_by_mat = st.checkbox('Color by material')
+            
+            if color_by_mat == True:
+                my_colors   ={}#None#{}
+                mat_names = [mat.name for mat in my_mats]
+                print('mat_names',mat_names)
+                for mat_name in mat_names:
+                    st.color_picker(f'Color by material {mat_name}', key=mat_name)
+
+                for material in my_mats:
+                    hex_color = st.session_state[material.name].lstrip('#')
+
+                    RGB = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+                    my_colors[material]=RGB
+                
+                print(my_colors)
+            
             pixels_height = int(1500 / aspect_ratio)
 
             plt = my_universe.plot(
