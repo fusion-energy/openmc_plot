@@ -40,9 +40,15 @@ def main():
 
     datafile = st.file_uploader("Upload your geometry.xml and materials.xml",type=['xml'],accept_multiple_files=True)
 
+
     if datafile == []:
         new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml and materials.xml</p>'
         st.markdown(new_title, unsafe_allow_html=True)
+        
+        st.markdown(
+            'Not got xml files handy? Download sample [geometry.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/tokamak/geometry.xml) and [materials.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/tokamak/materials.xml)'
+        )
+
     
     elif len(datafile)==1:
         if datafile[0].name == 'geometry.xml':

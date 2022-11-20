@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<materials>
+<material id="1" name="Copper">
+    <density units="g/cm3" value="8.5" />
+    <nuclide ao="0.6915" name="Cu63" />
+    <nuclide ao="0.3085" name="Cu65" />
+</material>
+<material id="2" name="steel">
+    <density units="g/cm3" value="7.75" />
+    <nuclide name="Fe54" wo="5.639912668173671" />
+    <nuclide name="Fe56" wo="91.80962724300858" />
+    <nuclide name="Fe57" wo="2.15820824876622" />
+    <nuclide name="Fe58" wo="0.2922518400515415" />
+    <nuclide name="C12" wo="0.0988006845085805" />
+    <nuclide name="C13" wo="0.0011993154914195009" />
+</material>
+<material id="3" name="breeder_material">
+    <density units="g/cm3" value="2.1" />
+    <nuclide ao="1.199062" name="Li6" />
+    <nuclide ao="14.600938" name="Li7" />
+</material>
+</materials>
+    
