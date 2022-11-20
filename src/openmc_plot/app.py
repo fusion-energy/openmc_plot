@@ -1,99 +1,99 @@
-#!/usr/bin/env python3
-
-
-# # run with "streamlit run app.py"
-
 import streamlit as st
 import openmc
 import matplotlib.pyplot as plt
 
+def save_uploadedfile(uploadedfile):
+    with open(uploadedfile.name, "wb") as f:
+        f.write(uploadedfile.getbuffer())
+    return st.success(f"Saved File to {uploadedfile.name}")
+ 
+def main():
 
-if __name__ == "__main__":
+
+    st.set_page_config(
+            page_title="OpenMC Plot",
+            page_icon="⚛",
+            layout="wide",
+        )
 
     hide_streamlit_style = """
                 <style>
                 #MainMenu {visibility: hidden;}
-                footer {visibility: hidden;}
-                footer:after {
-                    content:'Made by Jonathan Shimwell'; 
-                    visibility: visible;
-                    display: block;
-                    position: relative;
-                    #background-color: red;
-                    padding: 5px;
-                    top: 2px;
-                }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     st.write(
         """
-        # OpenMC plot
-        ⚛ A geometry plotting user interface for OpenMC ⚛.
-    """
+            # OpenMC plot
+            ⚛ A geometry plotting user interface for OpenMC.
+            
+            👉 Create your OpenMC model and export the xml files ```export_to_xml()```
+            
+            📧 Email feedback to mail@jshimwell.com
+
+            🐍 Install this app locally with Python ```pip install openmc_plot``` then run with ```openmc_plot```
+
+            💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot)
+        """
     )
 
-    st.write("👉 Add your openmc.Surfaces, openmc.Cells and openmc.Universe to the text box below.")
-    st.write("👉 Then set the openmc.Universe equal to a variable called my_universe.")
-    st.write("👉 To assign colors create a variable called my_colors which contains a dictionary of cells or materials and their colors.")
+    datafile = st.file_uploader("Upload your geometry.xml and materials.xml",type=['xml'],accept_multiple_files=True)
 
-    geometry_code = st.text_area(
-        label="Edit the contents of the text box then press ⌨ ctrl and enter to update ♻ the plot",
-        height=420,
-        value=(
-            '# makes 4 surfaces\n'
-            'surface_1 = openmc.Sphere(r=100)\n'
-            'surface_2 = openmc.ZPlane(z0=40)\n'
-            'surface_3 = openmc.Plane(a=1.5, b=0, c=0.75, d=1)\n'
-            'surface_4 = openmc.Plane(a=1, b=0, c=-0.6, d=25)\n'
-            '\n'
-            '# makes 3 cells\n'
-            'cell_1 = openmc.Cell(region=-surface_1&+surface_2)\n'
-            'cell_2 = openmc.Cell(region=-surface_1&+surface_3)\n'
-            'cell_3 = openmc.Cell(region=-surface_1&+surface_4)\n'
-            '\n'
-
-            '# sets the openmc.Universe equal to a variable called my_universe.\n'
-            'my_universe = openmc.Universe(cells=[cell_1, cell_2, cell_3])\n'
-
-            '\n'
-            '# sets the colors of each cell to red\n'
-            'my_colors = {cell_1: "red", cell_2: "red", cell_3: "red"}\n'
-        )
-    ) 
+    if datafile == []:
+        new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml and materials.xml</p>'
+        st.markdown(new_title, unsafe_allow_html=True)
     
-    if geometry_code is not None:
-        exec(geometry_code)
+    elif len(datafile)==1:
+        if datafile[0].name == 'geometry.xml':
+            new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your materials.xml</p>'
+            st.markdown(new_title, unsafe_allow_html=True)
+        elif datafile[0].name == 'materials.xml':
+            new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml</p>'
+            st.markdown(new_title, unsafe_allow_html=True)
+    elif len(datafile)>2:
+        new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">You have uploaded too many files, upload just the geometry.xml and material.xml files.</p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        
+    elif len(datafile)==2:
+        filenames = [datafile[0].name, datafile[1].name]
+        if 'geometry.xml' in filenames and 'materials.xml' in filenames:
+    
+            save_uploadedfile(datafile[0])
+            save_uploadedfile(datafile[1])
 
-        if 'my_universe' in locals():
-            if 'my_colors' not in locals():
-                st.write('No variable called "colors" found, using random colors for plot')
-                my_colors=None
+            my_mats = openmc.Materials.from_xml('materials.xml')
+            my_geometry = openmc.Geometry.from_xml(materials=my_mats)
+            my_universe = my_geometry.root_universe
+
+            my_colors=None
             
             bb = my_universe.bounding_box
 
-            option = st.selectbox(
+            col1, col2 = st.columns([1, 3])
+
+
+            option = col1.selectbox(
                 label='Axis basis',
                 options=('XZ', 'XY', 'YZ'),
                 index=0
             )
             
-            x_offset = st.slider(
+            x_offset = col1.slider(
                 label='X axis offset',
                 min_value=float(bb[0][0]),
                 max_value=float(bb[1][0]),
                 value=float((bb[0][0]+bb[1][0])/2)
             )
 
-            y_offset = st.slider(
+            y_offset = col1.slider(
                 label='Y axis offset',
                 min_value=float(bb[0][1]),
                 max_value=float(bb[1][1]),
                 value=float((bb[0][1]+bb[1][1])/2)
             )
 
-            z_offset = st.slider(
+            z_offset = col1.slider(
                 label='Z axis offset',
                 min_value=float(bb[0][2]),
                 max_value=float(bb[1][2]),
@@ -120,23 +120,30 @@ if __name__ == "__main__":
                 xlabel = 'Y [cm]'
                 ylabel = 'Z [cm]'
 
-            plot_width = st.number_input(
+            plot_width = col1.number_input(
                 label='Plot width (cm)',
                 min_value=1.,
                 step=1.,
                 value=plot_width_bb,
             )
 
-            plot_height = st.number_input(
+            plot_height = col1.number_input(
                 label='Plot height (cm)',
                 min_value=1.,
                 step=1.,
                 value=plot_height_bb,
             )
+            global plt
             base_plot=plt.axes(xlabel=xlabel, ylabel=ylabel)
             aspect_ratio = plot_width / plot_height
-            pixels_width = 1000
-            pixels_height = int(1000 / aspect_ratio)
+            
+            pixels_width = col1.number_input(
+                'Image resolution (pixels in width)',
+                min_value=10,
+                value=1500
+            )
+            # pixels_width = 1500
+            pixels_height = int(1500 / aspect_ratio)
 
             plt = my_universe.plot(
                 width=(plot_width, plot_height),
@@ -147,13 +154,11 @@ if __name__ == "__main__":
                 colors=my_colors
             )
             plt.figure.savefig('image.png')
-            st.image('image.png', use_column_width='always')
-            
+            col2.image('image.png', use_column_width='always')
+                
         else:
-            st.write("Create an openmc.Universe() object called my_universe to display the plots")
-
-
-    st.write("Link to 🐍 [source code repository](https://github.com/fusion-energy/openmc_plot) where you can raise a feature request, report and issue or make a contribution.")
+            new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload just geometry.xml and material.xml with these filenames</p>'
+            st.markdown(new_title, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
