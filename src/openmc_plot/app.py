@@ -1,6 +1,7 @@
 import streamlit as st
 import openmc
 import matplotlib.pyplot as plt
+from pylab import *
 
 def save_uploadedfile(uploadedfile):
     with open(uploadedfile.name, "wb") as f:
@@ -82,8 +83,6 @@ def main():
             
             my_geometry = openmc.Geometry.from_xml(materials=my_mats)
             my_universe = my_geometry.root_universe
-
-            my_colors=None
             
             bb = my_universe.bounding_box
 
@@ -159,7 +158,62 @@ def main():
                 min_value=10,
                 value=1500
             )
-            # pixels_width = 1500
+
+            color_by = st.radio(
+                'Color by options',
+                options=['random','cell','material']
+            )
+            
+            if color_by == 'material':
+                cmap = cm.get_cmap('viridis', len(my_mats))
+
+                initial_hex_color = []
+                for i in range(cmap.N):
+                    rgba = cmap(i)
+                    # rgb2hex accepts rgb or rgba
+                    initial_hex_color.append(matplotlib.colors.rgb2hex(rgba))
+    
+                my_colors   ={}
+                mat_names = [mat.name for mat in my_mats]
+                for c, mat_name in enumerate(mat_names):
+                    st.color_picker(
+                        f'Color of material {mat_name}',
+                        key=mat_name,
+                        value=initial_hex_color[c]
+                    )
+
+                for material in my_mats:
+                    hex_color = st.session_state[material.name].lstrip('#')
+                    RGB = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+                    my_colors[material]=RGB
+
+            elif color_by == 'cell':
+                my_cells = my_universe.cells
+                my_cells_ids = my_universe.cells.keys()
+                cmap = cm.get_cmap('viridis', len(my_cells))
+
+                initial_hex_color = []
+                for i in range(cmap.N):
+                    rgba = cmap(i)
+                    # rgb2hex accepts rgb or rgba
+                    initial_hex_color.append(matplotlib.colors.rgb2hex(rgba))
+    
+                my_colors   ={}
+                for c, cell_id in enumerate(my_cells_ids):
+                    st.color_picker(
+                        f'Color of cell {cell_id}',
+                        key=f'cell_{cell_id}',
+                        value=initial_hex_color[c]
+                    )
+
+                for cell, cell_id in zip(my_cells, my_cells_ids):
+                    hex_color = st.session_state[f'cell_{cell_id}'].lstrip('#')
+                    RGB = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+                    my_colors[cell]=RGB
+
+            else:  #random selected
+                my_colors=None
+            
             pixels_height = int(1500 / aspect_ratio)
 
             plt = my_universe.plot(
