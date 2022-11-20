@@ -19,7 +19,7 @@ ENV OPENMC_CROSS_SECTIONS="/cross_sections.xml"
 
 RUN conda install -c conda-forge streamlit==1.14.1
 # RUN pip install streamlit==0.84.2
-COPY app.py .
+COPY src/openmc_plot/app.py .
 COPY .streamlit/config.toml .streamlit/config.toml
 
 ENV PORT 8501

@@ -19,6 +19,9 @@ def main():
     hide_streamlit_style = """
                 <style>
                 #MainMenu {visibility: hidden;}
+                footer {
+                    visibility: hidden;
+                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -26,15 +29,15 @@ def main():
     st.write(
         """
             # OpenMC plot
-            ⚛ A geometry plotting user interface for OpenMC.
+            ### ⚛ A geometry plotting user interface for OpenMC.
             
-            👉 Create your OpenMC model and export the xml files ```export_to_xml()```
-            
-            📧 Email feedback to mail@jshimwell.com
+            👉 Create your OpenMC model and export the xml files ```export_to_xml()``` then upload them to this app.
 
-            🐍 Install this app locally with Python ```pip install openmc_plot``` then run with ```openmc_plot```
+            🐍 Run this app locally with Python ```pip install openmc_plot``` then run with ```openmc_plot```
 
             💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot)
+
+            📧 Email feedback to mail@jshimwell.com
         """
     )
 
@@ -69,6 +72,14 @@ def main():
             save_uploadedfile(datafile[1])
 
             my_mats = openmc.Materials.from_xml('materials.xml')
+            
+            # removes all the nuclides otherwise these are needed in the cross_sections.xml
+            for mat in my_mats:
+                for element in mat.get_elements():
+                    mat.remove_element(element)
+                # adds a single nuclide that is in minimal cross section xml to avoid material failing
+                mat.add_nuclide('Li6', 1)
+            
             my_geometry = openmc.Geometry.from_xml(materials=my_mats)
             my_universe = my_geometry.root_universe
 
