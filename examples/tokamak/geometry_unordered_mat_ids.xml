@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<geometry>
+  <cell id="1" material="1" region="-1 -5" universe="1" />
+  <cell id="2" material="2" region="1 -2 -5" universe="1" />
+  <cell id="3" material="7" region="-4 3 2" universe="1" />
+  <cell id="4" material="3" region="4 -5 2" universe="1" />
+  <surface coeffs="0.0 0.0 100" id="1" type="z-cylinder" />
+  <surface boundary="vacuum" coeffs="0.0 0.0 110" id="2" type="z-cylinder" />
+  <surface boundary="vacuum" coeffs="0.0 0.0 0.0 500" id="3" type="sphere" />
+  <surface coeffs="0.0 0.0 0.0 510" id="4" type="sphere" />
+  <surface coeffs="0.0 0.0 0.0 610" id="5" type="sphere" />
+</geometry>

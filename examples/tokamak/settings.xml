@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<settings>
+  <run_mode>eigenvalue</run_mode>
+  <particles>1</particles>
+  <batches>1</batches>
+  <source strength="1.0">
+    <space origin="0.0 0.0 0.0" type="cylindrical">
+      <r type="discrete">
+        <parameters>9.0 1.0</parameters>
+      </r>
+      <phi parameters="0.0 6.28318530718" type="uniform" />
+      <z type="discrete">
+        <parameters>0.0 1.0</parameters>
+      </z>
+    </space>
+    <angle type="isotropic" />
+  </source>
+</settings>

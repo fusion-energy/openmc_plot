@@ -1,23 +1,24 @@
 import streamlit as st
 import openmc
+import openmc_source_plotter
 import matplotlib.pyplot as plt
 from pylab import *
 import xml.etree.ElementTree as ET
+
 
 def save_uploadedfile(uploadedfile):
     with open(uploadedfile.name, "wb") as f:
         f.write(uploadedfile.getbuffer())
     return st.success(f"Saved File to {uploadedfile.name}")
  
-def main():
-
+def header():
 
     st.set_page_config(
             page_title="OpenMC Plot",
             page_icon="⚛",
             layout="wide",
         )
-
+     
     hide_streamlit_style = """
                 <style>
                 #MainMenu {visibility: hidden;}
@@ -33,7 +34,6 @@ def main():
             # OpenMC plot
             ### ⚛ A geometry plotting user interface for OpenMC.
             
-            👉 Create your OpenMC model and export the geometry xml file using ```export_to_xml()``` and upload it.
 
             🐍 Run this app locally with Python ```pip install openmc_plot``` then run with ```openmc_plot```
 
@@ -42,7 +42,16 @@ def main():
             📧 Email feedback to mail@jshimwell.com
         """
     )
+    st.write('<br>', unsafe_allow_html=True)
 
+
+def create_geometry_tab():
+
+    st.write(
+        """
+            👉 Create your ```openmc.Geometry()``` and export the geometry xml file using ```export_to_xml()```.
+        """
+    )
     geometry_xml_file = st.file_uploader("Upload your geometry.xml",type=['xml'])
 
 
@@ -58,16 +67,22 @@ def main():
     
         save_uploadedfile(geometry_xml_file)
         
-        tree = ET.parse('geometry.xml')
+        tree = ET.parse(geometry_xml_file.name)
         
         root = tree.getroot()
         all_cells = root.findall('cell')
         mat_ids = []
         for cell in all_cells:
-            mat_ids.append(int(cell.get('id')))
-        set_mat_ids = set(mat_ids)
+            if 'material' in cell.keys():
+                if cell.get('material') == 'void':
+                    print(f'material for cell {cell} is void')
+                else:
+                    mat_ids.append(int(cell.get('material')))
         my_mats = []
-
+        if len(mat_ids) >= 1:
+            set_mat_ids = set(mat_ids)
+        else:
+            set_mat_ids = ()
 
         for mat_id in set_mat_ids:
             new_mat = openmc.Material()
@@ -77,7 +92,11 @@ def main():
             my_mats.append(new_mat)
 
 
-        my_geometry = openmc.Geometry.from_xml(materials=my_mats)
+        my_geometry = openmc.Geometry.from_xml(
+            path=geometry_xml_file.name,
+            materials=my_mats
+        )
+
         my_universe = my_geometry.root_universe
 
         
@@ -159,7 +178,7 @@ def main():
 
         color_by = st.radio(
             'Color by options',
-            options=['random','cell','material']
+            options=['cell','material']
         )
         
         if color_by == 'material':
@@ -172,7 +191,6 @@ def main():
                 initial_hex_color.append(matplotlib.colors.rgb2hex(rgba))
 
             my_colors   ={}
-            
             for c, id in enumerate(set_mat_ids):
                 st.color_picker(
                     f'Color of material with id {id}',
@@ -184,6 +202,8 @@ def main():
                 hex_color = st.session_state[f'mat_{material.id}'].lstrip('#')
                 RGB = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
                 my_colors[material]=RGB
+            if len(set_mat_ids) == 0:
+                col1.write('No material IDs found in the geometry.xml')
 
         elif color_by == 'cell':
             my_cells = my_universe.cells
@@ -220,10 +240,100 @@ def main():
             origin=(x_offset, y_offset, z_offset),
             axes=base_plot,
             pixels=(pixels_width, pixels_height),
-            colors=my_colors
+            colors=my_colors,
+            color_by=color_by,
         )
         plt.figure.savefig('image.png')
         col2.image('image.png', use_column_width='always')
+
+
+def create_source_tab():
+    
+    st.write(
+        """
+            👉 Create your ```openmc.Settings()``` assign the Source and export the settings xml file using ```export_to_xml()```.
+        """
+    )
+    settings_xml_file = st.file_uploader("Upload your settings.xml",type=['xml'], key='settings_uploader')
+
+
+    if settings_xml_file == None:
+        new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml</p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        
+        st.markdown(
+            'Not got xml files handy? Download sample [settings.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/tokamak/geometry.xml "download")'
+        )
+
+    else:
+    
+        save_uploadedfile(settings_xml_file)
+        
+        my_settings = openmc.Settings.from_xml(settings_xml_file.name)
+
+        col1, col2 = st.columns([1, 3])
+
+        type_of_source_plot = col1.radio(
+            'Select type of plot',
+            options=['Energy', 'Space', 'Angle']
+        )
+
+        n_samples = col1.number_input(
+            label='number of samples',
+            min_value=1,
+            step=1,
+            value=1000,
+        )
+
+        if type_of_source_plot == 'Energy':
+    
+            fig=None
+
+            for old_source in my_settings.source:
+  
+                new_source = openmc.Source()
+                new_source.energy = old_source.energy
+                
+                fig = new_source.plot_source_energy(figure=fig, n_samples=n_samples)
+
+            col2.plotly_chart(fig)
+            
+        if type_of_source_plot == 'Angle':
+    
+            fig=None
+
+            for old_source in my_settings.source:
+  
+                new_source = openmc.Source()
+                new_source.angle = old_source.angle
+                new_source.space = old_source.space
+                
+                fig = new_source.plot_source_direction(figure=fig, n_samples=n_samples)
+
+            col2.plotly_chart(fig)
+
+        if type_of_source_plot == 'Space':
+    
+            fig=None
+
+            for old_source in my_settings.source:
+  
+                new_source = openmc.Source()
+                new_source.space = old_source.space
+                
+                fig = new_source.plot_source_position(figure=fig, n_samples=n_samples)
+
+            col2.plotly_chart(fig)
+ 
+def main():
+    
+    header()
+
+    geometry_tab, source_tab = st.tabs(["Geometry plot", "Source Plot"])
+    with geometry_tab:
+        create_geometry_tab()
+    with source_tab:
+        create_source_tab()
 
 if __name__ == "__main__":
     main()

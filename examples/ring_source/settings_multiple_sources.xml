@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<settings>
+  <run_mode>eigenvalue</run_mode>
+  <source strength="1.0">
+    <space origin="0.0 0.0 0.0" type="cylindrical">
+      <r type="discrete">
+        <parameters>10.0 1.0</parameters>
+      </r>
+      <phi parameters="0.0 6.28318530718" type="uniform" />
+      <z type="discrete">
+        <parameters>0.0 1.0</parameters>
+      </z>
+    </space>
+    <angle type="isotropic" />
+    <energy parameters="14080000.0 474636.70317412243" type="normal" />
+  </source>
+  <source strength="1.0">
+    <space origin="0.0 0.0 0.0" type="cylindrical">
+      <r type="discrete">
+        <parameters>9.0 1.0</parameters>
+      </r>
+      <phi parameters="0.0 6.28318530718" type="uniform" />
+      <z type="discrete">
+        <parameters>0.0 1.0</parameters>
+      </z>
+    </space>
+    <angle type="isotropic" />
+    <energy parameters="2000000.0 200000.0" type="normal" />
+  </source>
+</settings>
