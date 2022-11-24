@@ -56,13 +56,13 @@ mat_2.set_density('g/cm3', 1)
 firstwall_cell.fill = mat_2
 
 mat_3 = openmc.Material()
-mat_3.id = 2
+mat_3.id = 4
 mat_3.add_element('Na', 1)
 mat_3.set_density('g/cm3', 1)
 blanket_cell.fill = mat_3
 
 mat_4 = openmc.Material()
-mat_4.id = 2
+mat_4.id = 9
 mat_4.add_element('Na', 1)
 mat_4.set_density('g/cm3', 1)
 inner_vessel_cell.fill = mat_4
