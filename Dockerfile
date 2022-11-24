@@ -18,6 +18,7 @@ ENV OPENMC_CROSS_SECTIONS="/cross_sections.xml"
 # COPY assets assets
 
 RUN pip install streamlit
+RUN pip install openmc_source_plotter>=0.6.2
 COPY src/openmc_plot/app.py .
 COPY .streamlit/config.toml .streamlit/config.toml
 
