@@ -258,11 +258,11 @@ def create_source_tab():
 
 
     if settings_xml_file == None:
-        new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml</p>'
+        new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your settings.xml</p>'
         st.markdown(new_title, unsafe_allow_html=True)
         
         st.markdown(
-            'Not got xml files handy? Download sample [settings.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/tokamak/geometry.xml "download")'
+            'Not got xml files handy? Download sample [settings.xml](https://github.com/fusion-energy/openmc_plot/blob/main/examples/ring_source/settings.xml "download")'
         )
 
     else:
@@ -285,36 +285,29 @@ def create_source_tab():
             value=1000,
         )
 
+        fig=None
+
         if type_of_source_plot == 'Energy':
-    
-            fig=None
 
             for old_source in my_settings.source:
   
                 new_source = openmc.Source()
                 new_source.energy = old_source.energy
-                
+
                 fig = new_source.plot_source_energy(figure=fig, n_samples=n_samples)
 
-            col2.plotly_chart(fig)
-            
         if type_of_source_plot == 'Angle':
-    
-            fig=None
 
             for old_source in my_settings.source:
   
                 new_source = openmc.Source()
                 new_source.angle = old_source.angle
                 new_source.space = old_source.space
+                new_source.energy = old_source.energy
                 
                 fig = new_source.plot_source_direction(figure=fig, n_samples=n_samples)
 
-            col2.plotly_chart(fig)
-
         if type_of_source_plot == 'Space':
-    
-            fig=None
 
             for old_source in my_settings.source:
   
@@ -323,7 +316,7 @@ def create_source_tab():
                 
                 fig = new_source.plot_source_position(figure=fig, n_samples=n_samples)
 
-            col2.plotly_chart(fig)
+        col2.plotly_chart(fig)
  
 def main():
     
