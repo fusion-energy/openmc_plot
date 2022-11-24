@@ -23,7 +23,7 @@ classifiers = [
 ]
 dependencies = [
     "streamlit==1.14.1",
-    "openmc_source_plotter"
+    "openmc_source_plotter>=0.6.2"
 ]
 dynamic = ["version"]
 
