@@ -78,12 +78,13 @@ def create_geometry_tab():
                     print(f'material for cell {cell} is void')
                 else:
                     mat_ids.append(int(cell.get('material')))
-        my_mats = []
+
         if len(mat_ids) >= 1:
             set_mat_ids = set(mat_ids)
         else:
             set_mat_ids = ()
 
+        my_mats = []
         for mat_id in set_mat_ids:
             new_mat = openmc.Material()
             new_mat.id =mat_id
@@ -99,19 +100,22 @@ def create_geometry_tab():
 
         my_universe = my_geometry.root_universe
 
-        
-        
         bb = my_universe.bounding_box
 
         col1, col2 = st.columns([1, 3])
-
 
         option = col1.selectbox(
             label='Axis basis',
             options=('XZ', 'XY', 'YZ'),
             index=0
         )
-        
+
+        # bb may have -inf or inf values in, these break the slider bar automatic scaling
+        if np.isinf(bb[0][0]) or np.isinf(bb[1][0]):
+            msg="Infinity value found in X axis, axis length can't be automatically found. Input desired Z axis length"
+            x_width = col1.number_input(msg, value=1.)
+            x_offset = col1.number_input('X axis offset')
+        x_width = abs(bb[0][0] - bb[1][0])
         x_offset = col1.slider(
             label='X axis offset',
             min_value=float(bb[0][0]),
@@ -119,6 +123,11 @@ def create_geometry_tab():
             value=float((bb[0][0]+bb[1][0])/2)
         )
 
+        if np.isinf(bb[0][1]) or np.isinf(bb[1][1]):
+            msg="Infinity value found in Y axis, axis length can't be automatically found. Input desired Z axis length"
+            y_width = col1.number_input(msg, value=1.)
+            y_offset = col1.number_input('Y axis offset')
+        y_width = abs(bb[0][1] - bb[1][1])
         y_offset = col1.slider(
             label='Y axis offset',
             min_value=float(bb[0][1]),
@@ -126,16 +135,19 @@ def create_geometry_tab():
             value=float((bb[0][1]+bb[1][1])/2)
         )
 
-        z_offset = col1.slider(
-            label='Z axis offset',
-            min_value=float(bb[0][2]),
-            max_value=float(bb[1][2]),
-            value=float((bb[0][2]+bb[1][2])/2)
-        )
+        if np.isinf(bb[0][2]) or np.isinf(bb[1][2]):
+            msg="Infinity value found in Z axis, axis length can't be automatically found. Input desired Z axis length"
+            z_width = col1.number_input(msg, value=1.)
+            z_offset = col1.number_input('Z axis offset')
+        else:
+            z_width = abs(bb[0][2] - bb[1][2])
+            z_offset = col1.slider(
+                label='Z axis offset',
+                min_value=float(bb[0][2]),
+                max_value=float(bb[1][2]),
+                value=float((bb[0][2]+bb[1][2])/2)
+            )
 
-        x_width = abs(bb[0][0] - bb[1][0])
-        y_width = abs(bb[0][1] - bb[1][1])
-        z_width = abs(bb[0][2] - bb[1][2])
 
         if option == 'XZ':
             plot_width_bb = x_width
@@ -167,7 +179,7 @@ def create_geometry_tab():
             value=plot_height_bb,
         )
         global plt
-        base_plot=plt.axes(xlabel=xlabel, ylabel=ylabel)
+        base_plot=plt.axes(xlabel = xlabel, ylabel = ylabel)
         aspect_ratio = plot_width / plot_height
         
         pixels_width = col1.number_input(
