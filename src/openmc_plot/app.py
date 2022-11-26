@@ -329,16 +329,66 @@ def create_source_tab():
                 fig = new_source.plot_source_position(figure=fig, n_samples=n_samples)
 
         col2.plotly_chart(fig)
+
+def create_regularmesh_tab():
+    st.write(
+        """
+            👉 Run an OpenMC simulation with a 3D tally containing a RegularMesh filter.
+        """
+    )
+    statepoint_file = st.file_uploader("Upload your statepoint file",type=['h5'], key='statepoint_uploader')
+
+
+    if statepoint_file == None:
+        new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your statepoint h5 file</p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        
+        # todo make a small statepoint file for the repo
+        # st.markdown(
+        #     'Not got statepoint.h5 files handy? Download sample [statepoint.h5](https://github.com/fusion-energy/openmc_plot/blob/main/examples/regularmesh_tally/statepoint.40.h5 "download")'
+        # )
+
+    else:
+    
+        save_uploadedfile(statepoint_file)
+        
+        # loads up the output file from the simulation
+        statepoint = openmc.StatePoint(statepoint_file.name)
+        
+        for id, tally in statepoint.tallies.items():
+            print(tally)
+            for filter in tally.filters:
+                print(filter)
+                if isinstance(filter, openmc.filter.MeshFilter):
+                    mesh = filter.mesh
+                    if isinstance(mesh, openmc.mesh.RegularMesh):
+                        break
+        
+        st.write(mesh)
+        st.write(tally)
+        
+        col1, col2 = st.columns([1, 3])
+
+        option = col1.selectbox(
+            label='Axis basis',
+            options=('XZ', 'XY', 'YZ'),
+            index=0
+        )
+        
+        # col1, col2 = st.columns([1, 3])
+        
  
 def main():
     
     header()
 
-    geometry_tab, source_tab = st.tabs(["Geometry plot", "Source Plot"])
+    geometry_tab, source_tab, regularmesh_tab = st.tabs(["Geometry plot", "Source Plot", "Regular Mesh Plot"])
     with geometry_tab:
         create_geometry_tab()
     with source_tab:
         create_source_tab()
+    with regularmesh_tab:
+        create_regularmesh_tab()
 
 if __name__ == "__main__":
     main()
