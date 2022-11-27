@@ -4,6 +4,7 @@ import openmc_source_plotter
 import matplotlib.pyplot as plt
 from pylab import *
 import xml.etree.ElementTree as ET
+from matplotlib.colors import LogNorm
 
 
 def save_uploadedfile(uploadedfile):
@@ -355,6 +356,7 @@ def create_regularmesh_tab():
         # loads up the output file from the simulation
         statepoint = openmc.StatePoint(statepoint_file.name)
         
+        # todo allow multiple tallies and multiple scores
         for id, tally in statepoint.tallies.items():
             print(tally)
             for filter in tally.filters:
@@ -362,27 +364,95 @@ def create_regularmesh_tab():
                 if isinstance(filter, openmc.filter.MeshFilter):
                     mesh = filter.mesh
                     if isinstance(mesh, openmc.mesh.RegularMesh):
+                        tally_id = tally.id
+                        tally_score = tally.scores[0]
                         break
-        
-        st.write(mesh)
-        st.write(tally)
         
         col1, col2 = st.columns([1, 3])
 
-        option = col1.selectbox(
-            label='Axis basis',
-            options=('XZ', 'XY', 'YZ'),
+        axis_to_slice = col1.selectbox(
+            label='Slice plane',
+            options=('X', 'Y', 'Z'),
             index=0
         )
+        my_tally = statepoint.get_tally(id=tally_id)
+        flat_tally=my_tally.mean.flatten()
+        flat_std_dev=my_tally.std_dev.flatten()
+        reshaped_tally = flat_tally.reshape(mesh.dimension, order='F')
+        reshaped_std_dev = flat_std_dev.reshape(mesh.dimension, order='F')
         
-        # col1, col2 = st.columns([1, 3])
+        if axis_to_slice == 'X':
+            tally_aligned = reshaped_tally.transpose(1,2,0) # todo find correct numbers
+            std_dev_aligned = reshaped_std_dev.transpose(1,2,0) # todo find correct numbers
+            bb_index=0
+            x_label='Y [cm]'
+            y_label='Z [cm]'
+        elif axis_to_slice == 'Y':
+            tally_aligned = reshaped_tally.transpose(1,2,0)
+            std_dev_aligned = reshaped_std_dev.transpose(1,2,0) # todo find correct numbers
+            bb_index=1
+            x_label='X [cm]'
+            y_label='Z [cm]'
+        else: # axis_to_slice == 'Z':
+            tally_aligned = reshaped_tally.transpose(2,0,1)
+            std_dev_aligned = reshaped_std_dev.transpose(2,0,1)
+            bb_index=2
+            x_label = 'X [cm]' # todo check order of x,y
+            y_label = 'Y [cm]'
+
+
+        left=mesh.lower_left[bb_index]
+        right=mesh.upper_right[bb_index]
+        bottom=mesh.lower_left[bb_index]
+        top=mesh.upper_right[bb_index]
+
+        slice_value = col1.slider(
+            label='slice index',
+            min_value=0,
+            max_value=len(tally_aligned)-1,
+            value=int(len(tally_aligned)/2),
+        )
+    
+        log_lin_scale = col1.radio(
+            'Normalization',
+            options=['log','linear']
+        )
+        if log_lin_scale=='linear':
+            norm = None
+        else:
+            norm = LogNorm()
+        tally_or_std = col1.radio(
+            'Tally value or std dev',
+            options=['value','std dev']
+        )
+        global plt
+        if tally_or_std=='value':
+            plt.axes(title = 'Tally value', xlabel = x_label, ylabel = y_label)
+            plt.imshow(
+                X=tally_aligned[slice_value],
+                extent=(left, right, bottom, top),
+                norm=norm
+            )
+    
+        else:
+        
+            plt.axes(title = 'Tally standard deviation', xlabel = x_label, ylabel = y_label)
+            plt.imshow(
+                X=std_dev_aligned[slice_value],
+                extent=(left, right, bottom, top),
+                norm=norm
+            )
+        
+
+        plt.colorbar(label= 'standard deviation of '+ tally_score)
+        col2.pyplot(plt)
         
  
 def main():
     
     header()
 
-    geometry_tab, source_tab, regularmesh_tab = st.tabs(["Geometry plot", "Source Plot", "Regular Mesh Plot"])
+    geometry_tab, source_tab, regularmesh_tab = st.tabs(["🖼 Geometry plot", "✴️ Source Plot", "🧊 Regular Mesh Plot"])
     with geometry_tab:
         create_geometry_tab()
     with source_tab:
