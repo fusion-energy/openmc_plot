@@ -168,14 +168,14 @@ def create_geometry_tab():
 
         plot_width = col1.number_input(
             label='Plot width (cm)',
-            min_value=1.,
+            min_value=0.,
             step=1.,
             value=plot_width_bb,
         )
 
         plot_height = col1.number_input(
             label='Plot height (cm)',
-            min_value=1.,
+            min_value=0.,
             step=1.,
             value=plot_height_bb,
         )
@@ -247,7 +247,7 @@ def create_geometry_tab():
         
         pixels_height = int(1500 / aspect_ratio)
 
-        plt = my_universe.plot(
+        geom_plt = my_universe.plot(
             width=(plot_width, plot_height),
             basis=option.lower(),
             origin=(x_offset, y_offset, z_offset),
@@ -256,7 +256,7 @@ def create_geometry_tab():
             colors=my_colors,
             color_by=color_by,
         )
-        plt.figure.savefig('image.png')
+        geom_plt.figure.savefig('image.png')
         col2.image('image.png', use_column_width='always')
 
 
@@ -425,7 +425,9 @@ def create_regularmesh_tab():
             'Tally value or std dev',
             options=['value','std dev']
         )
-        global plt
+        # global plt
+        plt.cla()
+        plt.clf()
         if tally_or_std=='value':
             plt.axes(title = 'Tally value', xlabel = x_label, ylabel = y_label)
             plt.imshow(
@@ -433,6 +435,9 @@ def create_regularmesh_tab():
                 extent=(left, right, bottom, top),
                 norm=norm
             )
+            # plt.xlabel(x_label)
+            # plt.ylabel(y_label)
+            # plt.title('Tally value')
     
         else:
         
@@ -442,6 +447,9 @@ def create_regularmesh_tab():
                 extent=(left, right, bottom, top),
                 norm=norm
             )
+            # plt.xlabel(x_label)
+            # plt.ylabel(y_label)
+            # plt.title('Tally standard deviation')
         
 
         plt.colorbar(label= 'standard deviation of '+ tally_score)
