@@ -294,34 +294,21 @@ def create_source_tab():
         )
 
         fig = None
-
-        if type_of_source_plot == "Energy":
-
-            for old_source in my_settings.source:
-
-                new_source = openmc.Source()
-                new_source.energy = old_source.energy
-
-                fig = new_source.plot_source_energy(figure=fig, n_samples=n_samples)
-
-        if type_of_source_plot == "Angle":
-
-            for old_source in my_settings.source:
-
-                new_source = openmc.Source()
+        
+        new_source = openmc.Source()
+        for old_source in my_settings.source:
+            if old_source.angle is not None:
                 new_source.angle = old_source.angle
+            if old_source.space is not None:
                 new_source.space = old_source.space
+            if old_source.energy is not None:
                 new_source.energy = old_source.energy
-
+            
+            if type_of_source_plot == "Energy":
+                fig = new_source.plot_source_energy(figure=fig, n_samples=n_samples)
+            if type_of_source_plot == "Angle":
                 fig = new_source.plot_source_direction(figure=fig, n_samples=n_samples)
-
-        if type_of_source_plot == "Space":
-
-            for old_source in my_settings.source:
-
-                new_source = openmc.Source()
-                new_source.space = old_source.space
-
+            if type_of_source_plot == "Space":
                 fig = new_source.plot_source_position(figure=fig, n_samples=n_samples)
 
         col2.plotly_chart(fig)
