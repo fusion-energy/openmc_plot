@@ -294,16 +294,16 @@ def create_source_tab():
         )
 
         fig = None
-        
-        new_source = openmc.Source()
+
         for old_source in my_settings.source:
+            new_source = openmc.Source()
             if old_source.angle is not None:
                 new_source.angle = old_source.angle
             if old_source.space is not None:
                 new_source.space = old_source.space
             if old_source.energy is not None:
                 new_source.energy = old_source.energy
-            
+
             if type_of_source_plot == "Energy":
                 fig = new_source.plot_source_energy(figure=fig, n_samples=n_samples)
             if type_of_source_plot == "Angle":
