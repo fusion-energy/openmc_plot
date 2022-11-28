@@ -5,6 +5,13 @@ import matplotlib.pyplot as plt
 from pylab import *
 import xml.etree.ElementTree as ET
 from matplotlib.colors import LogNorm
+import pathlib
+
+# assigns a minmal cross section xml file
+# this means the user does not need to set the environment variable
+# the h5 files are not actually needed as we are only plotting
+cross_section_path = pathlib.Path(__file__).parent.resolve() / 'cross_sections.xml'
+openmc.config['cross_sections'] = cross_section_path
 
 
 def save_uploadedfile(uploadedfile):
@@ -14,6 +21,7 @@ def save_uploadedfile(uploadedfile):
 
 
 def header():
+    """This section writes out the page header common to all tabs"""
 
     st.set_page_config(
         page_title="OpenMC Plot",
@@ -330,6 +338,7 @@ def create_regularmesh_tab():
     )
 
     # TODO add image of 3d regular mesh
+    # col2.image("image.png", use_column_width="always")
 
     if statepoint_file == None:
         new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your statepoint h5 file</p>'
@@ -347,12 +356,11 @@ def create_regularmesh_tab():
         # loads up the output file from the simulation
         statepoint = openmc.StatePoint(statepoint_file.name)
 
+        # finds all the tallies that have a regular mesh and gets their ID,
+        # score and mesh ID. These are used to make the "tally to plot" dropdown
         tally_description = []
-        # TODO allow multiple tallies and multiple scores
         for id, tally in statepoint.tallies.items():
-            print(tally)
             for filter in tally.filters:
-                print(filter)
                 if isinstance(filter, openmc.filter.MeshFilter):
                     mesh = filter.mesh
                     if isinstance(mesh, openmc.mesh.RegularMesh):
@@ -360,8 +368,6 @@ def create_regularmesh_tab():
                             tally_description.append(
                                 f"ID={tally.id} score={score} mesh_ID={mesh.id}"
                             )
-                        # tally_score = tally.scores[0]
-                        break
 
         col1, col2 = st.columns([1, 3])
 
@@ -398,7 +404,7 @@ def create_regularmesh_tab():
         elif axis_to_slice == "Y":
             tally_aligned = reshaped_tally.transpose(
                 0, 1, 2
-            )  # todo find correct numbers
+            )
             bb_index = 1
             x_label = "X [cm]"
             y_label = "Z [cm]"
@@ -439,10 +445,12 @@ def create_regularmesh_tab():
         plt.clf()
 
         plt.axes(title="Tally value", xlabel=x_label, ylabel=y_label)
-        plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
+        # could be assigned like this
         # plt.xlabel(x_label)
         # plt.ylabel(y_label)
         # plt.title('Tally value')
+
+        plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
         plt.colorbar(label=cbar_label)
         col2.pyplot(plt)
 

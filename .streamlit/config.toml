@@ -2,4 +2,4 @@
 
 # Whether to send usage statistics to Streamlit.
 # Default: true
-gatherUsageStats = true
+gatherUsageStats = false
