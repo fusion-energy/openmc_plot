@@ -25,6 +25,8 @@ openmc_plot
 
 Your default web browser should then load with the GUI.
 
+You will also need to have [OpenMC installed](https://docs.openmc.org/en/stable/quickinstall.html).
+
 # Run web app locally
 
 You can view the hosted version of this repository here [xsplot.com](http://xsplot.com). However you might want to host your own version locally.
