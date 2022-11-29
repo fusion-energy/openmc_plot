@@ -10,6 +10,7 @@ from header import header
 from source_tab import create_source_tab
 from geometry_tab import create_geometry_tab
 from regularmesh_tab import create_regularmesh_tab
+from weightwindows_tab import create_weightwindow_tab
 
 # assigns a minimal cross section xml file
 # this means the user does not need to set the environment variable
@@ -22,8 +23,8 @@ def main():
 
     header()
 
-    geometry_tab, source_tab, regularmesh_tab = st.tabs(
-        ["🖼 Geometry plot", "✴️ Source Plot", "🧊 Regular Mesh Plot"]
+    geometry_tab, source_tab, regularmesh_tab, weightwindow_tab = st.tabs(
+        ["🖼 Geometry plot", "✴️ Source Plot", "🧊 Regular Mesh Plot", "🪟 Weight Windows Plot"]
     )
     with geometry_tab:
         create_geometry_tab()
@@ -31,6 +32,8 @@ def main():
         create_source_tab()
     with regularmesh_tab:
         create_regularmesh_tab()
+    with weightwindow_tab:
+        create_weightwindow_tab()
 
 
 if __name__ == "__main__":
