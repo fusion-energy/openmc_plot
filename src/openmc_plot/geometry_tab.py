@@ -207,6 +207,8 @@ def create_geometry_tab():
         )
         geom_plt.figure.savefig("geometry_image.png")
 
+        col2.image("geometry_image.png", use_column_width="always")
+
         with open("geometry_image.png", "rb") as file:
             col1.download_button(
                 label="Download image",
@@ -215,4 +217,3 @@ def create_geometry_tab():
                 mime="image/png"
             )
 
-        col2.image("geometry_image.png", use_column_width="always")
