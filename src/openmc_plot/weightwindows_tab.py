@@ -56,10 +56,9 @@ def create_weightwindow_tab():
         mesh = selected_weight_window.mesh
         
         reshaped_tally = plotted_part_of_weight_window.reshape(mesh.dimension, order="F")
-        print('reshaped_tally.shape', reshaped_tally.shape)
 
         axis_to_slice = col1.selectbox(
-            label="Slice plane", options=("X", "Y", "Z"), index=0
+            label="Slice plane", options=("X", "Y", "Z"), index=0, key='ww_axis_to_slice'
         )
 
         if axis_to_slice == "X":
@@ -80,15 +79,11 @@ def create_weightwindow_tab():
             x_label = "X [cm]"
             y_label = "Y [cm]"
 
-        print('tally_aligned.shape', tally_aligned.shape)
-
-
         left = mesh.lower_left[bb_index]
         right = mesh.upper_right[bb_index]
         bottom = mesh.lower_left[bb_index]
         top = mesh.upper_right[bb_index]
 
-        print('len(tally_aligned) - 1,',len(tally_aligned) - 1)
         slice_value = col1.slider(
             label="slice index",
             min_value=0,
@@ -96,7 +91,9 @@ def create_weightwindow_tab():
             value=int(len(tally_aligned) / 2),
         )
 
-        log_lin_scale = col1.radio("Normalization", options=["log", "linear"])
+        log_lin_scale = col1.radio(
+            "Normalization", options=["log", "linear"],
+            key='ww_log_lin_scale')
         if log_lin_scale == "linear":
             norm = None
         else:

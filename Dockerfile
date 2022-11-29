@@ -16,9 +16,11 @@ RUN pip install streamlit
 RUN pip install openmc_source_plotter>=0.6.2
 
 COPY src/openmc_plot/app.py .
+COPY src/openmc_plot/header.py .
 COPY src/openmc_plot/geometry_tab.py .
 COPY src/openmc_plot/source_tab.py .
 COPY src/openmc_plot/regularmesh_tab.py .
+COPY src/openmc_plot/weightwindows_tab.py .
 COPY src/openmc_plot/utils.py .
 COPY src/openmc_plot/cross_sections.xml .
 # optional copy
