@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<settings>
+  <run_mode>eigenvalue</run_mode>
+  <particles>5000</particles>
+  <batches>150</batches>
+  <inactive>50</inactive>
+  <source strength="1.0">
+    <space type="box">
+      <parameters>-0.662425 -0.662425 0.0 0.662425 0.662425 0.0</parameters>
+    </space>
+  </source>
+  <temperature_method>interpolation</temperature_method>
+  <temperature_multipole>true</temperature_multipole>
+</settings>
