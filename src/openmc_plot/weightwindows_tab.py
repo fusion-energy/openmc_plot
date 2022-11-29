@@ -126,3 +126,12 @@ def create_weightwindow_tab():
             )
             plt.colorbar(label=upper_or_lower)
             col2.pyplot(plt)
+            plt.savefig("weightwindow_image.png")
+
+            with open("weightwindow_image.png", "rb") as file:
+                col1.download_button(
+                    label="Download image",
+                    data=file,
+                    file_name="weightwindow_image.png",
+                    mime="image/png"
+                )

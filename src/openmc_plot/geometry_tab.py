@@ -205,5 +205,15 @@ def create_geometry_tab():
             colors=my_colors,
             color_by=color_by,
         )
-        geom_plt.figure.savefig("image.png")
-        col2.image("image.png", use_column_width="always")
+        geom_plt.figure.savefig("geometry_image.png")
+
+        col2.image("geometry_image.png", use_column_width="always")
+
+        with open("geometry_image.png", "rb") as file:
+            col1.download_button(
+                label="Download image",
+                data=file,
+                file_name="geometry_image.png",
+                mime="image/png"
+            )
+
