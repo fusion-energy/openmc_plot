@@ -132,11 +132,11 @@ def create_regularmesh_tab():
         plt.colorbar(label=cbar_label)
         col2.pyplot(plt)
 
-        plt.savefig('regularmesh_image.png')
-        with open("regularmesh_image.png", "rb") as file:
+        plt.savefig('openmc_plot_regularmesh_image.png')
+        with open("openmc_plot_regularmesh_image.png", "rb") as file:
             col1.download_button(
                 label="Download image",
                 data=file,
-                file_name="regularmesh_image.png",
+                file_name="openmc_plot_regularmesh_image.png",
                 mime="image/png"
             )
