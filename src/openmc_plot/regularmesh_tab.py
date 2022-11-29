@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.colors import LogNorm
 import plotly.express as px
+import plotly.graph_objects as go
 import numpy as np
 
 def create_regularmesh_tab():
@@ -149,22 +150,34 @@ def create_regularmesh_tab():
 
         with col_plotly:
             img_rgb = np.array(image_slice)
-            figure = px.imshow(
-                img_rgb,
-                color_continuous_scale='viridis',
-                # colorbar=dict(title='Title') ,
-            )
+            # figure = px.imshow(
+            #     img_rgb,
+            #     color_continuous_scale='viridis',
+            #     # colorbar=dict(title='Title') ,
+            #     width=800, height=800,
+            # )
+
+            # https://plotly.com/python/heatmaps/
+            figure = go.Figure(
+                data=go.Heatmap(
+                    z=img_rgb,
+                    colorscale='viridis',
+                    # colorbar=dict(title='Title')
+                    ),
+                )
+
+
             figure.update_layout(
                 # title="Particle energy",
                 xaxis={"title": x_label},
                 yaxis={"title": y_label},
-                coloraxis_colorbar=dict(
-                    title=cbar_label,
-                )
+                # colorbar=dict(
+                #     title=cbar_label,
+                # ),
             )
             figure.update_yaxes(
-                scaleanchor = "x",
-                scaleratio = 1,
+                # scaleanchor = "x",
+                # scaleratio = 1,
                 showticklabels=False
             )
             figure.update_xaxes(
