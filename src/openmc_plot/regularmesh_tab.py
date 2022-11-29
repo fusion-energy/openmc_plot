@@ -4,7 +4,8 @@ import openmc
 import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.colors import LogNorm
-
+import plotly.express as px
+import numpy as np
 
 def create_regularmesh_tab():
     st.write(
@@ -119,24 +120,65 @@ def create_regularmesh_tab():
         if axis_to_slice == "X":
             image_slice = np.flipud(image_slice)
 
-        plt.cla()
-        plt.clf()
+        col_mpl, col_plotly = col2.tabs(
+            ["📉 MatplotLib image", "📈 Plotly interactive plot"]
+        )
+        with col_mpl:
 
-        plt.axes(title="Tally value", xlabel=x_label, ylabel=y_label)
-        # could be assigned like this
-        # plt.xlabel(x_label)
-        # plt.ylabel(y_label)
-        # plt.title('Tally value')
+            plt.cla()
+            plt.clf()
 
-        plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
-        plt.colorbar(label=cbar_label)
-        col2.pyplot(plt)
+            plt.axes(title="Tally value", xlabel=x_label, ylabel=y_label)
+            # could be assigned like this
+            # plt.xlabel(x_label)
+            # plt.ylabel(y_label)
+            # plt.title('Tally value')
 
-        plt.savefig('openmc_plot_regularmesh_image.png')
-        with open("openmc_plot_regularmesh_image.png", "rb") as file:
-            col1.download_button(
-                label="Download image",
-                data=file,
-                file_name="openmc_plot_regularmesh_image.png",
-                mime="image/png"
+            plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
+            plt.colorbar(label=cbar_label)
+
+            plt.savefig('openmc_plot_regularmesh_image.png')
+            with open("openmc_plot_regularmesh_image.png", "rb") as file:
+                col_mpl.download_button(
+                    label="Download image",
+                    data=file,
+                    file_name="openmc_plot_regularmesh_image.png",
+                    mime="image/png"
+                )
+            col_mpl.pyplot(plt)
+
+        with col_plotly:
+            img_rgb = np.array(image_slice)
+            figure = px.imshow(
+                img_rgb,
+                color_continuous_scale='viridis',
+                # colorbar=dict(title='Title') ,
             )
+            figure.update_layout(
+                # title="Particle energy",
+                xaxis={"title": x_label},
+                yaxis={"title": y_label},
+                coloraxis_colorbar=dict(
+                    title=cbar_label,
+                )
+            )
+            figure.update_yaxes(
+                scaleanchor = "x",
+                scaleratio = 1,
+                showticklabels=False
+            )
+            figure.update_xaxes(
+                showticklabels=False
+            )
+            # figure.update_xaxes(range=[left, right])
+            # figure.update_yaxes(range=[bottom, top], autorange=False)
+            figure.write_html('openmc_plot_regularmesh_image.html')
+
+            with open("openmc_plot_regularmesh_image.html", "rb") as file:
+                col_plotly.download_button(
+                    label="Download image",
+                    data=file,
+                    file_name="openmc_plot_regularmesh_image.html",
+                    mime=None
+                )
+            col_plotly.plotly_chart(figure)
