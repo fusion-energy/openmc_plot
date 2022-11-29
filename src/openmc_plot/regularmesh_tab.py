@@ -131,3 +131,12 @@ def create_regularmesh_tab():
         plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
         plt.colorbar(label=cbar_label)
         col2.pyplot(plt)
+
+        plt.savefig('regularmesh_image.png')
+        with open("regularmesh_image.png", "rb") as file:
+            col1.download_button(
+                label="Download image",
+                data=file,
+                file_name="regularmesh_image.png",
+                mime="image/png"
+            )
