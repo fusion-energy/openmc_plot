@@ -15,6 +15,9 @@ This repository contains:
 # Plot regular mesh tallies
 ![openmc plot mesh](https://canada1.discourse-cdn.com/free1/uploads/openmc/original/2X/2/24a9db7bc9cc227908dbaf13a54d1245a4d16f20.gif)
 
+# Plot weight windows
+![openmc plot mesh](https://canada1.discourse-cdn.com/free1/uploads/openmc/original/2X/1/114aeb91172c7577e9231ffe30edf141678d26f6.gif)
+
 # Install
 
 OpenMC_plot can be install directly from the Python package index (PyPi) using pip.
