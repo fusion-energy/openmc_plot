@@ -70,25 +70,27 @@ def create_geometry_tab():
             msg = "Infinity value found in X axis, axis length can't be automatically found. Input desired Z axis length"
             x_width = col1.number_input(msg, value=1.0)
             x_offset = col1.number_input("X axis offset")
-        x_width = abs(bb[0][0] - bb[1][0])
-        x_offset = col1.slider(
-            label="X axis offset",
-            min_value=float(bb[0][0]),
-            max_value=float(bb[1][0]),
-            value=float((bb[0][0] + bb[1][0]) / 2),
-        )
+        else:
+            x_width = abs(bb[0][0] - bb[1][0])
+            x_offset = col1.slider(
+                label="X axis offset",
+                min_value=float(bb[0][0]),
+                max_value=float(bb[1][0]),
+                value=float((bb[0][0] + bb[1][0]) / 2),
+            )
 
         if np.isinf(bb[0][1]) or np.isinf(bb[1][1]):
             msg = "Infinity value found in Y axis, axis length can't be automatically found. Input desired Z axis length"
             y_width = col1.number_input(msg, value=1.0)
             y_offset = col1.number_input("Y axis offset")
-        y_width = abs(bb[0][1] - bb[1][1])
-        y_offset = col1.slider(
-            label="Y axis offset",
-            min_value=float(bb[0][1]),
-            max_value=float(bb[1][1]),
-            value=float((bb[0][1] + bb[1][1]) / 2),
-        )
+        else:
+            y_width = abs(bb[0][1] - bb[1][1])
+            y_offset = col1.slider(
+                label="Y axis offset",
+                min_value=float(bb[0][1]),
+                max_value=float(bb[1][1]),
+                value=float((bb[0][1] + bb[1][1]) / 2),
+            )
 
         if np.isinf(bb[0][2]) or np.isinf(bb[1][2]):
             msg = "Infinity value found in Z axis, axis length can't be automatically found. Input desired Z axis length"
