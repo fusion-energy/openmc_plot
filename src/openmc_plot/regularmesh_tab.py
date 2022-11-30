@@ -4,9 +4,9 @@ import openmc
 import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.colors import LogNorm
-import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+
 
 def create_regularmesh_tab():
     st.write(
