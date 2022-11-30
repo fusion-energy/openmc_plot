@@ -4,6 +4,8 @@ import openmc
 import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.colors import LogNorm
+import plotly.graph_objects as go
+import numpy as np
 
 
 def create_regularmesh_tab():
@@ -113,30 +115,92 @@ def create_regularmesh_tab():
         image_slice = tally_aligned[slice_value]
 
         if axis_to_slice == "Y":
-            image_slice = np.rot90(image_slice)
+            mpl_image_slice = np.rot90(image_slice)
+            plotly_image_slice = np.rot90(image_slice, 3)
         if axis_to_slice == "Z":
-            image_slice = np.rot90(image_slice)
+            mpl_image_slice = np.rot90(image_slice)
+            plotly_image_slice = np.rot90(image_slice, 1)
         if axis_to_slice == "X":
-            image_slice = np.flipud(image_slice)
+            mpl_image_slice = np.flipud(image_slice)
+            plotly_image_slice = image_slice
 
-        plt.cla()
-        plt.clf()
+        col_mpl, col_plotly = col2.tabs(
+            ["📉 MatplotLib image", "📈 Plotly interactive plot"]
+        )
+        with col_mpl:
 
-        plt.axes(title="Tally value", xlabel=x_label, ylabel=y_label)
-        # could be assigned like this
-        # plt.xlabel(x_label)
-        # plt.ylabel(y_label)
-        # plt.title('Tally value')
+            plt.cla()
+            plt.clf()
 
-        plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
-        plt.colorbar(label=cbar_label)
-        col2.pyplot(plt)
+            plt.axes(title="Tally value", xlabel=x_label, ylabel=y_label)
+            # could be assigned like this
+            # plt.xlabel(x_label)
+            # plt.ylabel(y_label)
+            # plt.title('Tally value')
 
-        plt.savefig('openmc_plot_regularmesh_image.png')
-        with open("openmc_plot_regularmesh_image.png", "rb") as file:
-            col1.download_button(
-                label="Download image",
-                data=file,
-                file_name="openmc_plot_regularmesh_image.png",
-                mime="image/png"
+            plt.imshow(X=mpl_image_slice, extent=(left, right, bottom, top), norm=norm)
+            plt.colorbar(label=cbar_label)
+
+            plt.savefig('openmc_plot_regularmesh_image.png')
+            with open("openmc_plot_regularmesh_image.png", "rb") as file:
+                col_mpl.download_button(
+                    label="Download image",
+                    data=file,
+                    file_name="openmc_plot_regularmesh_image.png",
+                    mime="image/png"
+                )
+            col_mpl.pyplot(plt)
+
+        with col_plotly:
+            
+            # plotly does not fully support log heatmaps so z values are logged
+            # docs on heatmaps
+            # https://plotly.github.io/plotly.py-docs/generated/plotly.graph_objects.Heatmap.html
+            # https://plotly.com/python/heatmaps/
+            if log_lin_scale == "log":
+                figure = go.Figure(
+                    data=go.Heatmap(
+                        z=np.log(plotly_image_slice),
+                        colorscale='viridis',
+                        x0 =left,
+                        dx=abs(left-right)/(len(plotly_image_slice[0])-1),
+                        y0 =bottom,
+                        dy=abs(bottom-top)/(len(plotly_image_slice)-1),
+                        showscale=False  # avoids the color bar not being log scale
+                        ),
+                    )
+            else:
+                figure = go.Figure(
+                    data=go.Heatmap(
+                        z=plotly_image_slice,
+                        colorscale='viridis',
+                        x0 =left,
+                        dx=abs(left-right)/(len(plotly_image_slice[0])-1),
+                        y0 =bottom,
+                        dy=abs(bottom-top)/(len(plotly_image_slice)-1),
+                        colorbar=dict(title=dict(side="right", text=cbar_label)),
+                        ),
+                    )
+                
+
+            figure.update_layout(
+                xaxis={"title": x_label},
+                yaxis={"title": y_label},
+                autosize=False,
+                height=800,
             )
+            figure.update_yaxes(
+                scaleanchor = "x",
+                scaleratio = 1,
+            )
+
+            figure.write_html('openmc_plot_regularmesh_image.html')
+
+            with open("openmc_plot_regularmesh_image.html", "rb") as file:
+                col_plotly.download_button(
+                    label="Download image",
+                    data=file,
+                    file_name="openmc_plot_regularmesh_image.html",
+                    mime=None
+                )
+            col_plotly.plotly_chart(figure, use_container_width=True, height=800)

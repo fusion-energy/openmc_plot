@@ -13,6 +13,9 @@ FROM continuumio/miniconda3:4.12.0
 RUN conda install -c conda-forge openmc
 
 RUN pip install streamlit
+# Could be used to make mpl interactive
+# see https://blog.streamlit.io/make-your-st-pyplot-interactive/
+# RUN pip install mpld3
 RUN pip install openmc_source_plotter>=0.6.2
 
 COPY src/openmc_plot/app.py .
