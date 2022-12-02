@@ -8,6 +8,8 @@ def create_source_tab():
 
     st.write(
         """
+            This tab makes use of the 🐍 Python package ```openmc_source_plotter``` which is available on [GitHub](https://github.com/fusion-energy/openmc_source_plotter/).
+
             👉 Create your ```openmc.Settings()``` assign the Source and export the settings xml file using ```export_to_xml()```.
         """
     )
