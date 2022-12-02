@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 import openmc
 import matplotlib.pyplot as plt
 from pylab import *
-import xml.etree.ElementTree as ET
 
 
 def create_geometry_tab():
@@ -32,7 +31,7 @@ def create_geometry_tab():
         )
 
     else:
-    
+
         save_uploadedfile(geometry_xml_file)
 
         tree = ET.parse(geometry_xml_file.name)

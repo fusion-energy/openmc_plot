@@ -1,10 +1,6 @@
 import streamlit as st
 from utils import save_uploadedfile
-import xml.etree.ElementTree as ET
 import openmc
-import matplotlib.pyplot as plt
-from pylab import *
-import xml.etree.ElementTree as ET
 from dagmc_geometry_slice_plotter import plot_axis_slice
 
 
