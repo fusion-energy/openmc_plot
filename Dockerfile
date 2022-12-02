@@ -17,6 +17,7 @@ RUN pip install streamlit
 # see https://blog.streamlit.io/make-your-st-pyplot-interactive/
 # RUN pip install mpld3
 RUN pip install openmc_source_plotter>=0.6.2
+RUN pip install dagmc_geometry_slice_plotter>=0.2.0
 
 COPY src/openmc_plot/app.py .
 COPY src/openmc_plot/header.py .
@@ -24,6 +25,7 @@ COPY src/openmc_plot/geometry_tab.py .
 COPY src/openmc_plot/source_tab.py .
 COPY src/openmc_plot/regularmesh_tab.py .
 COPY src/openmc_plot/weightwindows_tab.py .
+COPY src/openmc_plot/dagmcslice_tab.py .
 COPY src/openmc_plot/utils.py .
 COPY src/openmc_plot/cross_sections.xml .
 # optional copy
