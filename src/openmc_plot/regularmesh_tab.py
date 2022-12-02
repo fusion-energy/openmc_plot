@@ -11,6 +11,8 @@ import numpy as np
 def create_regularmesh_tab():
     st.write(
         """
+        This tab makes use of the 🐍 Python package ```regular_mesh_plotter``` which is available on [GitHub](https://github.com/fusion-energy/regular_mesh_plotter).
+
             👉 Run an OpenMC simulation with a 3D tally containing a RegularMesh filter.
         """
     )

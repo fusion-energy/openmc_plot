@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 import openmc
 import matplotlib.pyplot as plt
 from pylab import *
-import xml.etree.ElementTree as ET
 
 
 def create_geometry_tab():
@@ -14,7 +13,14 @@ def create_geometry_tab():
             👉 Create your ```openmc.Geometry()``` and export the geometry xml file using ```export_to_xml()```.
         """
     )
-    geometry_xml_file = st.file_uploader("Upload your geometry.xml", type=["xml"])
+    geometry_xml_file = st.file_uploader("Upload your geometry.xml file", type=["xml"])
+
+    # TODO include hybrid geometry
+    # dagmc_h5m_file = st.file_uploader("Optionally upload your dagmc.h5m file", type=["h5m"])
+
+    # if dagmc_h5m_file is not None:
+    #     save_uploadedfile(dagmc_h5m_file)
+        
 
     if geometry_xml_file == None:
         new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml</p>'
