@@ -20,7 +20,7 @@ def create_dagmcslice_tab():
         st.markdown(new_title, unsafe_allow_html=True)
 
         st.markdown(
-            'Not got h5m files handy? Download sample [dagmc.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/dagmc_geometry/dagmc_text.h5m "download")'
+            'Not got h5m files handy? Download sample [dagmc.h5m](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/dagmc_geometry/dagmc_text.h5m "download")'
         )
 
     else:
