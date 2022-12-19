@@ -33,11 +33,14 @@ def create_weightwindow_tab():
         
         weight_windows = my_settings.weight_windows
 
-        if not weight_windows:
+        print('weight_windows', weight_windows)
+
+        if weight_windows == []:
 
             msg = f'{settings_xml_file.name} does not contain weight windows'
             new_title = f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
             st.markdown(new_title, unsafe_allow_html=True)
+
         else:
 
             weight_window_by_id = {}
