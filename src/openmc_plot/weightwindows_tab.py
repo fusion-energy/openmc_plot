@@ -33,8 +33,6 @@ def create_weightwindow_tab():
 
         weight_windows = my_settings.weight_windows
 
-        print('weight_windows', weight_windows)
-
         if weight_windows == []:
 
             msg = f'{settings_xml_file.name} does not contain weight windows'
@@ -49,9 +47,12 @@ def create_weightwindow_tab():
 
             col1, col2 = st.columns([1, 3])
 
-            weight_window_selector = col1.selectbox(
-                label="Weight window ID to plot", options=weight_window_by_id.keys(), index=0
-            )
+            if len(weight_window_by_id.keys()) > 1:
+                weight_window_selector = col1.selectbox(
+                    label="Weight window ID to plot", options=weight_window_by_id.keys(), index=0
+                )
+            else:
+                weight_window_selector = list(weight_window_by_id.keys())[0]
 
             selected_weight_window = weight_window_by_id[weight_window_selector]
 
@@ -66,7 +67,33 @@ def create_weightwindow_tab():
             mesh = selected_weight_window.mesh
 
             if isinstance(mesh, openmc.CylindricalMesh):
-                st.write('weight windows on CylindricalMesh are not supported')
+
+                reshaped_tally = plotted_part_of_weight_window.reshape(mesh.dimension, order="F")
+
+                # TODO add XY top down slice
+                # axis_to_slice = col1.selectbox(
+                #     label="Slice plane", options=("RZ", "XY"), index=0, key='ww_axis_to_slice'
+                # )
+                axis_to_slice = 'RZ'
+
+                reshaped_tally = plotted_part_of_weight_window.reshape((mesh.dimension[2], mesh.dimension[1], mesh.dimension[0]), order="F")
+
+                tally_aligned = reshaped_tally
+                x_label = "R [cm]"
+                y_label = "Z [cm]"
+
+                left = mesh.r_grid[0]
+                right = mesh.r_grid[-1]
+                bottom = mesh.z_grid[0]
+                top = mesh.z_grid[-1]
+
+                slice_value = col1.slider(
+                    label="slice index",
+                    min_value=0,
+                    max_value=len(mesh.phi_grid) - 1,
+                    value=int(len(mesh.phi_grid) / 2),
+                )
+
             elif isinstance(mesh, openmc.RegularMesh):
 
                 reshaped_tally = plotted_part_of_weight_window.reshape(mesh.dimension, order="F")
@@ -105,49 +132,50 @@ def create_weightwindow_tab():
                     value=int(len(tally_aligned) / 2),
                 )
 
-                log_lin_scale = col1.radio(
-                    "Normalization", options=["log", "linear"],
-                    key='ww_log_lin_scale')
-                if log_lin_scale == "linear":
-                    norm = None
-                else:
-                    norm = LogNorm()
+            log_lin_scale = col1.radio(
+                "Normalization", options=["log", "linear"],
+                key='ww_log_lin_scale')
+            if log_lin_scale == "linear":
+                norm = None
+            else:
+                norm = LogNorm()
 
-                image_slice = tally_aligned[slice_value]
+            image_slice = tally_aligned[slice_value]
 
-                if axis_to_slice == "Y":
-                    image_slice = np.rot90(image_slice)
-                if axis_to_slice == "Z":
-                    image_slice = np.rot90(image_slice)
-                if axis_to_slice == "X":
-                    image_slice = np.flipud(image_slice)
+            if axis_to_slice == "Y":
+                image_slice = np.rot90(image_slice)
+            if axis_to_slice == "Z":
+                image_slice = np.rot90(image_slice)
+            if axis_to_slice == "X":
+                image_slice = np.flipud(image_slice)
+            # no rotation for 'RZ'
 
-                plt.cla()
-                plt.clf()
+            plt.cla()
+            plt.clf()
 
-                plt.axes(title="Tally value", xlabel=x_label, ylabel=y_label)
-                # could be assigned like this
-                # plt.xlabel(x_label)
-                # plt.ylabel(y_label)
-                # plt.title('Tally value')
-                if np.amax(image_slice) == np.amin(image_slice) and norm is not None:
-                    msg = "slice contains the uniform values, can't be plotted on log scale"
-                    format = f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
-                    col2.markdown(format, unsafe_allow_html=True)
-                else:
-                    plt.imshow(
-                        X=image_slice,
-                        extent=(left, right, bottom, top),
-                        norm=norm
+            plt.axes(title=f"Weight window {upper_or_lower}", xlabel=x_label, ylabel=y_label)
+            # could be assigned like this
+            # plt.xlabel(x_label)
+            # plt.ylabel(y_label)
+            # plt.title('Tally value')
+            if np.amax(image_slice) == np.amin(image_slice) and norm is not None:
+                msg = "slice contains the uniform values, can't be plotted on log scale"
+                format = f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
+                col2.markdown(format, unsafe_allow_html=True)
+            else:
+                plt.imshow(
+                    X=image_slice,
+                    extent=(left, right, bottom, top),
+                    norm=norm
+                )
+                plt.colorbar(label=upper_or_lower)
+                col2.pyplot(plt)
+                plt.savefig("openmc_plot_weightwindow_image.png")
+
+                with open("openmc_plot_weightwindow_image.png", "rb") as file:
+                    col1.download_button(
+                        label="Download image",
+                        data=file,
+                        file_name="openmc_plot_weightwindow_image.png",
+                        mime="image/png"
                     )
-                    plt.colorbar(label=upper_or_lower)
-                    col2.pyplot(plt)
-                    plt.savefig("openmc_plot_weightwindow_image.png")
-
-                    with open("openmc_plot_weightwindow_image.png", "rb") as file:
-                        col1.download_button(
-                            label="Download image",
-                            data=file,
-                            file_name="openmc_plot_weightwindow_image.png",
-                            mime="image/png"
-                        )
