@@ -13,6 +13,8 @@ def create_weightwindow_tab():
     st.write(
         """
             👉 Create your ```openmc.WeightWindows()``` and export the settings xml file using ```export_to_xml()```.
+
+            Weight windows on RegularMesh and CylindricalMesh are supported
         """
     )
     settings_xml_file = st.file_uploader("Upload your settings.xml", type=["xml"])
