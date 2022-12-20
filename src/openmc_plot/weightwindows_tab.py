@@ -78,7 +78,7 @@ def create_weightwindow_tab():
 
                 reshaped_tally = plotted_part_of_weight_window.reshape((mesh.dimension[2], mesh.dimension[1], mesh.dimension[0]), order="F")
 
-                tally_aligned = reshaped_tally
+                tally_aligned = reshaped_tally.transpose(2, 0, 1)
                 x_label = "R [cm]"
                 y_label = "Z [cm]"
 
@@ -148,7 +148,8 @@ def create_weightwindow_tab():
                 image_slice = np.rot90(image_slice)
             if axis_to_slice == "X":
                 image_slice = np.flipud(image_slice)
-            # no rotation for 'RZ'
+            # if axis_to_slice == "RZ":
+            #     image_slice = np.flipud(image_slice)
 
             plt.cla()
             plt.clf()

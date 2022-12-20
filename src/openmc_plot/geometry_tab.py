@@ -20,7 +20,6 @@ def create_geometry_tab():
 
     # if dagmc_h5m_file is not None:
     #     save_uploadedfile(dagmc_h5m_file)
-        
 
     if geometry_xml_file == None:
         new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml</p>'
@@ -150,8 +149,10 @@ def create_geometry_tab():
 
         color_by = st.radio("Color by options", options=["cell", "material"])
 
+        selected_color_map = col1.selectbox(label="Color map", options=matplotlib.pyplot.colormaps(), index=0)
+
         if color_by == "material":
-            cmap = cm.get_cmap("viridis", len(my_mats))
+            cmap = cm.get_cmap(selected_color_map, len(my_mats))
 
             initial_hex_color = []
             for i in range(cmap.N):
@@ -178,7 +179,7 @@ def create_geometry_tab():
         elif color_by == "cell":
             my_cells = my_universe.cells
             my_cells_ids = my_universe.cells.keys()
-            cmap = cm.get_cmap("viridis", len(my_cells))
+            cmap = cm.get_cmap(selected_color_map, len(my_cells))
 
             initial_hex_color = []
             for i in range(cmap.N):
@@ -187,9 +188,13 @@ def create_geometry_tab():
                 initial_hex_color.append(matplotlib.colors.rgb2hex(rgba))
 
             my_colors = {}
-            for c, cell_id in enumerate(my_cells_ids):
+            for c, (cell_id, cell) in enumerate(my_universe.cells.items()):
+                if cell.name is '':
+                    cell_name = 'not set'
+                else:
+                    cell_name = cell.name
                 st.color_picker(
-                    f"Color of cell {cell_id}",
+                    f"Color of cell id {cell_id}, cell name {cell_name}",
                     key=f"cell_{cell_id}",
                     value=initial_hex_color[c],
                 )

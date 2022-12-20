@@ -131,3 +131,5 @@ dmypy.json
 *.png
 src/openmc_plot/_version.py
 **.h5
+**.html
+**.xml
