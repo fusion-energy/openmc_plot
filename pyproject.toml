@@ -23,6 +23,7 @@ classifiers = [
 ]
 dependencies = [
     "streamlit",
+    "openmc_geometry_plot>=0.3.1",
     "openmc_source_plotter>=0.6.2",
     "dagmc_geometry_slice_plotter>=0.3.0",
 ]
