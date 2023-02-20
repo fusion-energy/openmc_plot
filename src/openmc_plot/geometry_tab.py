@@ -50,13 +50,14 @@ def create_geometry_tab():
         else:
             set_mat_ids = ()
 
-        my_mats = []
+        mats_list = []
         for mat_id in set_mat_ids:
             new_mat = openmc.Material()
             new_mat.id = mat_id
             new_mat.add_nuclide("Li6", 1)
             # adds a single nuclide that is in minimal cross section xml to avoid material failing
-            my_mats.append(new_mat)
+            mats_list.append(new_mat)
+        my_mats = openmc.Materials(mats_list)
 
         my_geometry = openmc.Geometry.from_xml(
             path=geometry_xml_file.name, materials=my_mats
