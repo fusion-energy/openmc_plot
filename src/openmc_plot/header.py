@@ -22,7 +22,7 @@ def header():
 
     st.write(
         """
-            # OpenMC plot ```v0.2.0```
+            # OpenMC plot ```v0.2.1```
 
             ### ⚛ A geometry plotting user interface for OpenMC.
 
