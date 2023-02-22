@@ -23,10 +23,12 @@ def create_weightwindow_tab():
         new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your settings.xml</p>'
         st.markdown(new_title, unsafe_allow_html=True)
 
-        st.markdown(
-            'Not got xml files handy? Download sample [settings.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/weightwindows/settings.xml)'
+        st.write(
+            """
+                Not got a settings xml file handy, right mouse 🖱️ click and save these links 
+                [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/weightwindows/settings.xml)
+            """
         )
-
     else:
 
         save_uploadedfile(settings_xml_file)

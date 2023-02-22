@@ -21,26 +21,18 @@ def create_geometry_tab():
         """
     )
     file_label_col1, file_label_col2 = st.columns([1, 1])
-    file_label_col1.write(
+    file_col1, file_col2 = st.columns([1, 1])
+    file_col1.write(
         """
             👉 Create your ```openmc.Geometry()``` and export the geometry xml file using ```export_to_xml()```.
-
-            Not got a geometry.xml file handy, right mouse 🖱️ click and save these links 
-            [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/csg_tokamak/geometry.xml),
-            [ example 2 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/csg_cylinder_box/geometry.xml)
-
         """
     )
-    file_label_col2.write(
+    file_col2.write(
         """
             👉 Create your DAGMC h5m file using tools like [CAD-to-h5m](https://github.com/fusion-energy/cad_to_dagmc), [STL-to_h5m](https://github.com/fusion-energy/stl_to_h5m) [vertices-to-h5m](https://github.com/fusion-energy/vertices_to_h5m), [Brep-to-h5m](https://github.com/fusion-energy/brep_to_h5m) or the [Cubit](https://coreform.com/products/coreform-cubit/) [Plugin](https://github.com/svalinn/Cubit-plugin)
-            
-            Not got a DAGMC h5m file handy, right mouse 🖱️ click and save these links 
-            [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/dagmc_tokamak/dagmc_180_tokamak.h5m),
-            [ example 2 ](https://fusion-energy.github.io/openmc_plot/examples/dagmc_text/dagmc_text.h5m)
         """
     )
-    file_col1, file_col2 = st.columns([1, 1])
+            
     geometry_xml_file = file_col1.file_uploader(
         "Upload your geometry.xml", type=["xml"]
     )
@@ -52,9 +44,19 @@ def create_geometry_tab():
         new_title = '<center><p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml or DAGMC h5m file</p></center>'
         st.markdown(new_title, unsafe_allow_html=True)
 
-        sub_title = '<center><p> Not got geometry files handy? Download an example <a href="https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/tokamak/geometry.xml" download>geometry.xml</a> or DAGMC h5m file</p></center>'
-        st.markdown(sub_title, unsafe_allow_html=True)
-
+        st.write(
+            """
+                Not got a geometry.xml file handy, right mouse 🖱️ click and save these links 
+                [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/csg_tokamak/geometry.xml),
+                [ example 2 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/csg_cylinder_box/geometry.xml)
+            """
+        )
+        st.write(
+            """
+                Not got a DAGMC h5m file handy, right mouse 🖱️ click and save these links 
+                [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/dagmc_tokamak/dagmc_180_tokamak.h5m)
+            """
+        )
     # DAGMC route
     elif dagmc_file is not None and geometry_xml_file is not None:
 
