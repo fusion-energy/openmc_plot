@@ -37,7 +37,7 @@ def create_geometry_tab():
             
             Not got a DAGMC h5m file handy, right mouse 🖱️ click and save these links 
             [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/dagmc_tokamak/dagmc_180_tokamak.h5m)
-
+            [ example 2 ](https://fusion-energy.github.io/openmc_plot/examples/dagmc_geometry/dagmc_text.h5m)
         """
     )
     file_col1, file_col2 = st.columns([1, 1])
