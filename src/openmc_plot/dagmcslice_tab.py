@@ -19,8 +19,11 @@ def create_dagmcslice_tab():
         new_title = '<p style="font-family:sans-serif; color:Red; font-size: 30px;">Upload your geometry.xml</p>'
         st.markdown(new_title, unsafe_allow_html=True)
 
-        st.markdown(
-            'Not got h5m files handy? Download sample [dagmc.h5m](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/dagmc_geometry/dagmc_text.h5m "download")'
+        st.write(
+            """
+                Not got a DAGMC h5m file handy, right mouse 🖱️ click and save these links 
+                [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/dagmc_tokamak/dagmc_180_tokamak.h5m)
+            """
         )
 
     else:

@@ -26,7 +26,7 @@ def create_weightwindow_tab():
         st.write(
             """
                 Not got a settings xml file handy, right mouse 🖱️ click and save these links 
-                [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/weightwindows/settings.xml)
+                [ example 1 ](https://fusion-energy.github.io/openmc_plot/examples/weightwindows/settings.xml)
             """
         )
     else:

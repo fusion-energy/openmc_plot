@@ -23,7 +23,7 @@ def create_source_tab():
 
         st.markdown(
             """
-            Not got a Statepoint h5 file handy, right mouse 🖱️ click and save this link
+            Not got a settings xml file handy, right mouse 🖱️ click and save this link
             [example 1](https://fusion-energy.github.io/openmc_plot/examples/ring_source/settings.xml)
             """
         )
