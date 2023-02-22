@@ -28,9 +28,11 @@ def create_regularmesh_tab():
         st.markdown(new_title, unsafe_allow_html=True)
 
         st.markdown(
-            'Not got statepoint.h5 files handy? Download sample [statepoint.h5](https://github.com/fusion-energy/openmc_plot/raw/adding_statepoint_example_file/examples/regularmesh_plot/statepoint.40.h5 "download")'
+            """
+            Not got a Statepoint h5 file handy, right mouse 🖱️ click and save this link
+            [example 1](https://github.com/fusion-energy/openmc_plot/raw/adding_statepoint_example_file/examples/regularmesh_plot/statepoint.40.h5)
+            """
         )
-
     else:
 
         save_uploadedfile(statepoint_file)
