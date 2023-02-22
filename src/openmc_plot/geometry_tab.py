@@ -36,8 +36,8 @@ def create_geometry_tab():
             👉 Create your DAGMC h5m file using tools like [CAD-to-h5m](https://github.com/fusion-energy/cad_to_dagmc), [STL-to_h5m](https://github.com/fusion-energy/stl_to_h5m) [vertices-to-h5m](https://github.com/fusion-energy/vertices_to_h5m), [Brep-to-h5m](https://github.com/fusion-energy/brep_to_h5m) or the [Cubit](https://coreform.com/products/coreform-cubit/) [Plugin](https://github.com/svalinn/Cubit-plugin)
             
             Not got a DAGMC h5m file handy, right mouse 🖱️ click and save these links 
-            [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/dagmc_tokamak/dagmc_180_tokamak.h5m)
-            [ example 2 ](https://fusion-energy.github.io/openmc_plot/examples/dagmc_geometry/dagmc_text.h5m)
+            [ example 1 ](https://fusion-energy.github.io/openmc_geometry_plot/examples/dagmc_tokamak/dagmc_180_tokamak.h5m),
+            [ example 2 ](https://fusion-energy.github.io/openmc_plot/examples/dagmc_text/dagmc_text.h5m)
         """
     )
     file_col1, file_col2 = st.columns([1, 1])
