@@ -22,7 +22,10 @@ def create_source_tab():
         st.markdown(new_title, unsafe_allow_html=True)
 
         st.markdown(
-            'Not got xml files handy? Download sample [settings.xml](https://raw.githubusercontent.com/fusion-energy/openmc_plot/main/examples/ring_source/settings.xml)'
+            """
+            Not got a settings xml file handy, right mouse 🖱️ click and save this link
+            [example 1](https://fusion-energy.github.io/openmc_plot/examples/ring_source/settings.xml)
+            """
         )
 
     else:
