@@ -86,6 +86,16 @@ def create_regularmesh_tab():
         score = my_tally.get_values(scores=[tally_score_to_plot],value =tally_or_std)
         mesh = my_tally.find_filter(filter_type=openmc.MeshFilter).mesh
         extent = mesh.get_mpl_plot_extent(view_direction=view_direction)
+
+        transposed_ds = mesh.reshape_data(score, view_direction)
+
+        slice_index = col1.slider(
+            label="slice index",
+            min_value=0,
+            max_value=len(transposed_ds) - 1,
+            value=int(len(transposed_ds) / 2),
+        )
+        
         if geometry_file:
             save_uploadedfile(geometry_file)
             if geometry_file.name.endswith('xml'):
@@ -110,42 +120,37 @@ def create_regularmesh_tab():
                 my_geometry = openmc.Geometry.from_xml(
                 path=geometry_file.name, materials=my_mats
                 )
-            outline = col1.radio(
-                "Tally mean or std dev", options=["material", "cell"]
-            )
-            if outline == "cells":
-                outline_data_slice = my_geometry.get_slice_of_cell_ids(
-                    view_direction=view_direction,
-                    plot_left=extent[0],
-                    plot_right=extent[1],
-                    plot_top=extent[2],
-                    plot_bottom=extent[3],
-                    pixels_across=500,
-                    # slice_value=slice_value,
+                outline = col1.radio(
+                    "Outline", options=["material", "cell", "None"]
                 )
-            else:
-                outline_data_slice = my_geometry.get_slice_of_material_ids(
-                    view_direction=view_direction,
-                    plot_left=extent[0],
-                    plot_right=extent[1],
-                    plot_top=extent[2],
-                    plot_bottom=extent[3],
-                    pixels_across=500,
-                    # slice_value=slice_value,
-                )
-        else:
-            outline=None
             
-
-
-        transposed_ds = mesh.reshape_data(score, view_direction)
-
-        slice_index = col1.slider(
-            label="slice index",
-            min_value=0,
-            max_value=len(transposed_ds) - 1,
-            value=int(len(transposed_ds) / 2),
-        )
+                slice_value=mesh.get_slice_axis_value_from_index(slice_index=slice_index, view_direction=view_direction)
+            
+                if outline == "cell":
+                    outline_data_slice = my_geometry.get_slice_of_cell_ids(
+                        view_direction=view_direction,
+                        plot_left=extent[0],
+                        plot_right=extent[1],
+                        plot_top=extent[2],
+                        plot_bottom=extent[3],
+                        pixels_across=500,
+                        slice_value=slice_value,
+                    )
+                elif outline == 'material':
+                    outline_data_slice = my_geometry.get_slice_of_material_ids(
+                        view_direction=view_direction,
+                        plot_left=extent[0],
+                        plot_right=extent[1],
+                        plot_top=extent[2],
+                        plot_bottom=extent[3],
+                        pixels_across=500,
+                        slice_value=slice_value,
+                    )
+                else:
+                    outline_data_slice = None
+                    
+        else:
+            outline_data_slice = None
 
         image_slice= mesh.slice_of_data(
             dataset=score,
@@ -183,19 +188,29 @@ def create_regularmesh_tab():
         )
         with col_mpl:
 
-            plt.cla()
-            plt.clf()
+            heatmap_axes = plt.subplot(1,1,1)
+            
+            (xlabel, ylabel) = mesh.get_axis_labels(
+                view_direction=view_direction
+            )
 
-            plt.axes(title="Tally value", xlabel=xlabel, ylabel=ylabel)
+            heatmap_axes.set_xlabel(xlabel)
+            heatmap_axes.set_ylabel(ylabel)
 
-            plt.imshow(X=mpl_image_slice, extent=extent, norm=norm)
+            im=heatmap_axes.imshow(
+                X=mpl_image_slice,
+                extent=extent,
+                norm=norm
+            )
 
+            plt.colorbar(im, label=cbar_label, ax=heatmap_axes)
 
-            if outline is not None:
+            if outline_data_slice is not None:
                 levels = np.unique(
                     [item for sublist in outline_data_slice for item in sublist]
                 )
-                plt.contour(
+                # contour_axes = heatmap_axes
+                heatmap_axes.contour(
                     outline_data_slice,
                     origin="upper",
                     colors="k",
@@ -205,7 +220,6 @@ def create_regularmesh_tab():
                     extent=extent,
                 )
 
-            plt.colorbar(label=cbar_label)
 
             plt.savefig('openmc_plot_regularmesh_image.png')
             with open("openmc_plot_regularmesh_image.png", "rb") as file:
