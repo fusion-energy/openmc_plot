@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 
 def header():
@@ -20,17 +21,35 @@ def header():
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-    st.write(
-        """
-            # OpenMC plot ```v0.2.2```
+    version = "v0.2.2"
+    location = os.getenv("OPENMC_PLOT_LOCATION")
 
-            ### ⚛ A plotting user interface for OpenMC.
+    if location == "cloud":
+        st.write(
+            f"""
+                # OpenMC plot ```{version}```
 
-            🐍 Run this app locally with Python ```pip install openmc_plot``` then run with ```openmc_plot```
+                ## ⚛ A plotting user interface for OpenMC.
 
-            💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot)
+                ### ⚡ Install this app locally for faster performance and improved stability.
+                
+                ### 🐍 Install with Python ```pip install openmc_plot``` then run with ```openmc_plot```
 
-            📧 Email feedback to mail@jshimwell.com
-        """
-    )
+                💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot)
+
+                📧 Email feedback to mail@jshimwell.com
+            """
+        )
+    else:
+        st.write(
+            f"""
+                # OpenMC plot ```{version}```
+
+                ### ⚛ A plotting user interface for OpenMC.
+
+                💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot)
+
+                📧 Email feedback to mail@jshimwell.com
+            """
+        )
     st.write("<br>", unsafe_allow_html=True)

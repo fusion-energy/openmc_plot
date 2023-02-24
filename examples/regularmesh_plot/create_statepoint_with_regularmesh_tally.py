@@ -25,7 +25,7 @@ eurofer_material.add_element("Li", 1)
 # dt_plasma_material.add_nuclide("H3", 0.5)
 
 mats = openmc.Materials(
-    [breeder_material, eurofer_material, copper_material]#, dt_plasma_material]
+    [breeder_material, eurofer_material, copper_material]  # , dt_plasma_material]
 )
 
 
@@ -42,7 +42,9 @@ first_wall_outer_surface = openmc.Sphere(r=510)
 breeder_blanket_outer_surface = openmc.Sphere(r=610, boundary_type="vacuum")
 
 # cells
-central_sol_region = -central_sol_surface & -breeder_blanket_outer_surface & +upper_port_hole
+central_sol_region = (
+    -central_sol_surface & -breeder_blanket_outer_surface & +upper_port_hole
+)
 central_sol_cell = openmc.Cell(region=central_sol_region)
 central_sol_cell.fill = copper_material
 
@@ -60,8 +62,11 @@ central_shield_cell.fill = eurofer_material
 # plasma_cell_cell.fill = dt_plasma_material
 
 inner_vessel_region = (
-    -vessel_inner_surface & +central_shield_outer_surface  & +port_hole & +upper_port_hole
-    #& +plasma_surface
+    -vessel_inner_surface
+    & +central_shield_outer_surface
+    & +port_hole
+    & +upper_port_hole
+    # & +plasma_surface
 )
 inner_vessel_cell = openmc.Cell(region=inner_vessel_region)
 # inner_vessel_cell.fill = eurofer_material
@@ -75,7 +80,9 @@ port_hole_cell = openmc.Cell(region=port_hole_region)
 # port_hole_cell.fill = eurofer_material
 # no material set as default is vacuum
 
-first_wall_region = -first_wall_outer_surface & +vessel_inner_surface & +port_hole &+upper_port_hole
+first_wall_region = (
+    -first_wall_outer_surface & +vessel_inner_surface & +port_hole & +upper_port_hole
+)
 first_wall_cell = openmc.Cell(region=first_wall_region)
 first_wall_cell.fill = eurofer_material
 
@@ -164,7 +171,7 @@ tallies.append(mesh_tally_1)
 
 model = openmc.model.Model(my_geometry, mats, sett, tallies)
 sp_filename = model.run()
-sp_filename = f'statepoint.{sett.batches}.h5'
+sp_filename = f"statepoint.{sett.batches}.h5"
 
 # loads up the output file from the simulation
 statepoint = openmc.StatePoint(sp_filename)
@@ -196,7 +203,7 @@ slice_value = int(len(ffx) / 2)
 plt.imshow(X=ffx[slice_value], extent=extent)
 plt.show()
 
-ffy = ff2#.transpose(2, 1, 0)
+ffy = ff2  # .transpose(2, 1, 0)
 left = mesh.lower_left[1]
 right = mesh.upper_right[1]
 bottom = mesh.lower_left[1]

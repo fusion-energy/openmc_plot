@@ -1,8 +1,9 @@
 import streamlit as st
 import openmc
 
+
 def make_pretend_mats(set_mat_ids):
-    
+
     my_mats = openmc.Materials()
     for mat_id in set_mat_ids:
         new_mat = openmc.Material()
@@ -11,6 +12,7 @@ def make_pretend_mats(set_mat_ids):
         # adds a single nuclide that is in minimal cross section xml to avoid material failing
         my_mats.append(new_mat)
     return my_mats
+
 
 def save_uploadedfile(uploadedfile):
     with open(uploadedfile.name, "wb") as f:

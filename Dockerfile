@@ -38,6 +38,7 @@ ENV PORT 8501
 
 EXPOSE 8501
 
+ENV OPENMC_PLOT_LOCATION cloud
 
 # solves bug of streamlit not running in container
 # https://github.com/streamlit/streamlit/issues/4842

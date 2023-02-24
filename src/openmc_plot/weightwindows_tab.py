@@ -39,7 +39,7 @@ def create_weightwindow_tab():
 
         if weight_windows == []:
 
-            msg = f'{settings_xml_file.name} does not contain weight windows'
+            msg = f"{settings_xml_file.name} does not contain weight windows"
             new_title = f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
             st.markdown(new_title, unsafe_allow_html=True)
 
@@ -53,7 +53,9 @@ def create_weightwindow_tab():
 
             if len(weight_window_by_id.keys()) > 1:
                 weight_window_selector = col1.selectbox(
-                    label="Weight window ID to plot", options=weight_window_by_id.keys(), index=0
+                    label="Weight window ID to plot",
+                    options=weight_window_by_id.keys(),
+                    index=0,
                 )
             else:
                 weight_window_selector = list(weight_window_by_id.keys())[0]
@@ -64,23 +66,31 @@ def create_weightwindow_tab():
                 "upper or lower bounds", options=["upper bounds", "lower bounds"]
             )
             if upper_or_lower == "upper bounds":
-                plotted_part_of_weight_window = selected_weight_window.upper_ww_bounds.flatten()
+                plotted_part_of_weight_window = (
+                    selected_weight_window.upper_ww_bounds.flatten()
+                )
             else:
-                plotted_part_of_weight_window = selected_weight_window.lower_ww_bounds.flatten()
+                plotted_part_of_weight_window = (
+                    selected_weight_window.lower_ww_bounds.flatten()
+                )
 
             mesh = selected_weight_window.mesh
 
             if isinstance(mesh, openmc.CylindricalMesh):
 
-                reshaped_tally = plotted_part_of_weight_window.reshape(mesh.dimension, order="F")
+                reshaped_tally = plotted_part_of_weight_window.reshape(
+                    mesh.dimension, order="F"
+                )
 
                 # TODO add XY top down slice
                 # axis_to_slice = col1.selectbox(
                 #     label="Slice plane", options=("RZ", "XY"), index=0, key='ww_axis_to_slice'
                 # )
-                axis_to_slice = 'RZ'
+                axis_to_slice = "RZ"
 
-                reshaped_tally = plotted_part_of_weight_window.reshape((mesh.dimension[2], mesh.dimension[1], mesh.dimension[0]), order="F")
+                reshaped_tally = plotted_part_of_weight_window.reshape(
+                    (mesh.dimension[2], mesh.dimension[1], mesh.dimension[0]), order="F"
+                )
 
                 tally_aligned = reshaped_tally.transpose(2, 0, 1)
                 x_label = "R [cm]"
@@ -100,10 +110,15 @@ def create_weightwindow_tab():
 
             elif isinstance(mesh, openmc.RegularMesh):
 
-                reshaped_tally = plotted_part_of_weight_window.reshape(mesh.dimension, order="F")
+                reshaped_tally = plotted_part_of_weight_window.reshape(
+                    mesh.dimension, order="F"
+                )
 
                 axis_to_slice = col1.selectbox(
-                    label="Slice plane", options=("X", "Y", "Z"), index=0, key='ww_axis_to_slice'
+                    label="Slice plane",
+                    options=("X", "Y", "Z"),
+                    index=0,
+                    key="ww_axis_to_slice",
                 )
 
                 if axis_to_slice == "X":
@@ -112,9 +127,7 @@ def create_weightwindow_tab():
                     x_label = "Y [cm]"
                     y_label = "Z [cm]"
                 elif axis_to_slice == "Y":
-                    tally_aligned = reshaped_tally.transpose(
-                        0, 1, 2
-                    )
+                    tally_aligned = reshaped_tally.transpose(0, 1, 2)
                     bb_index = 1
                     x_label = "X [cm]"
                     y_label = "Z [cm]"
@@ -137,8 +150,8 @@ def create_weightwindow_tab():
                 )
 
             log_lin_scale = col1.radio(
-                "Normalization", options=["log", "linear"],
-                key='ww_log_lin_scale')
+                "Normalization", options=["log", "linear"], key="ww_log_lin_scale"
+            )
             if log_lin_scale == "linear":
                 norm = None
             else:
@@ -158,7 +171,9 @@ def create_weightwindow_tab():
             plt.cla()
             plt.clf()
 
-            plt.axes(title=f"Weight window {upper_or_lower}", xlabel=x_label, ylabel=y_label)
+            plt.axes(
+                title=f"Weight window {upper_or_lower}", xlabel=x_label, ylabel=y_label
+            )
             # could be assigned like this
             # plt.xlabel(x_label)
             # plt.ylabel(y_label)
@@ -168,11 +183,7 @@ def create_weightwindow_tab():
                 format = f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
                 col2.markdown(format, unsafe_allow_html=True)
             else:
-                plt.imshow(
-                    X=image_slice,
-                    extent=(left, right, bottom, top),
-                    norm=norm
-                )
+                plt.imshow(X=image_slice, extent=(left, right, bottom, top), norm=norm)
                 plt.colorbar(label=upper_or_lower)
                 col2.pyplot(plt)
                 plt.savefig("openmc_plot_weightwindow_image.png")
@@ -182,5 +193,5 @@ def create_weightwindow_tab():
                         label="Download image",
                         data=file,
                         file_name="openmc_plot_weightwindow_image.png",
-                        mime="image/png"
+                        mime="image/png",
                     )

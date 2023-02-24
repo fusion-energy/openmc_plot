@@ -27,57 +27,55 @@ def create_dagmcslice_tab():
         )
 
     else:
-    
+
         save_uploadedfile(dagmc_h5m_file)
-        
+
         dagunv = openmc.DAGMCUniverse(dagmc_h5m_file.name).bounded_universe()
         bb = dagunv.bounding_box
 
         col1, col2 = st.columns([1, 3])
 
         view_direction = col1.selectbox(
-            label="View Direction",
-            options=('-z', 'z', '-x', 'x', '-y', 'y'),
-            index=0
+            label="View Direction", options=("-z", "z", "-x", "x", "-y", "y"), index=0
         )
-        
-        if view_direction in ['-x', 'x']:
+
+        if view_direction in ["-x", "x"]:
             x_offset = col1.slider(
-                    label="X axis offset",
-                    min_value=float(bb[0][0]),
-                    max_value=float(bb[1][0]),
-                    value=float((bb[0][0] + bb[1][0]) / 2),
-                )
+                label="X axis offset",
+                min_value=float(bb[0][0]),
+                max_value=float(bb[1][0]),
+                value=float((bb[0][0] + bb[1][0]) / 2),
+            )
         else:
             x_offset = float((bb[0][0] + bb[1][0]) / 2)
-            
-        if view_direction in ['-y', 'y']:
+
+        if view_direction in ["-y", "y"]:
             y_offset = col1.slider(
-                    label="Y axis offset",
-                    min_value=float(bb[0][1]),
-                    max_value=float(bb[1][1]),
-                    value=float((bb[0][1] + bb[1][1]) / 2),
-                )
+                label="Y axis offset",
+                min_value=float(bb[0][1]),
+                max_value=float(bb[1][1]),
+                value=float((bb[0][1] + bb[1][1]) / 2),
+            )
         else:
             y_offset = float((bb[0][1] + bb[1][1]) / 2)
 
-        if view_direction in ['-z', 'z']:
+        if view_direction in ["-z", "z"]:
             z_offset = col1.slider(
-                    label="Z axis offset",
-                    min_value=float(bb[0][2]),
-                    max_value=float(bb[1][2]),
-                    value=float((bb[0][2] + bb[1][2]) / 2),
-                )
+                label="Z axis offset",
+                min_value=float(bb[0][2]),
+                max_value=float(bb[1][2]),
+                value=float((bb[0][2] + bb[1][2]) / 2),
+            )
         else:
             z_offset = float((bb[0][2] + bb[1][2]) / 2)
 
         dag_plt = plot_axis_slice(
             dagmc_file_or_trimesh_object=dagmc_h5m_file.name,
             view_direction=view_direction,
-            plane_origin=[x_offset, y_offset, z_offset]
+            plane_origin=[x_offset, y_offset, z_offset],
         )
         col2.pyplot(dag_plt)
-        
+
         dag_plt.savefig("openmc_plot_dagmc_slice_image.png")
 
         with open("openmc_plot_dagmc_slice_image.png", "rb") as file:
@@ -85,6 +83,5 @@ def create_dagmcslice_tab():
                 label="Download image",
                 data=file,
                 file_name="openmc_plot_dagmc_slice_image.png",
-                mime="image/png"
+                mime="image/png",
             )
-

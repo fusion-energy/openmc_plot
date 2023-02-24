@@ -67,12 +67,12 @@ def create_source_tab():
 
         col2.plotly_chart(fig)
 
-        fig.write_html('openmc_plot_source_image.html')
+        fig.write_html("openmc_plot_source_image.html")
 
         with open("openmc_plot_source_image.html", "rb") as file:
             col1.download_button(
                 label="Download image",
                 data=file,
                 file_name="openmc_plot_source_image.html",
-                mime=None
+                mime=None,
             )
