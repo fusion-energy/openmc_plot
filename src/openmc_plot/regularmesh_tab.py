@@ -14,8 +14,6 @@ def create_regularmesh_tab():
     st.write(
         """
         This tab makes use of the 🐍 Python package ```regular_mesh_plotter``` which is available on [GitHub](https://github.com/fusion-energy/regular_mesh_plotter).
-
-            👉 Run an OpenMC simulation with a 3D tally containing a RegularMesh filter.
         """
     )
     
@@ -23,7 +21,7 @@ def create_regularmesh_tab():
 
     file_col1.write(
         """
-            👉 
+            👉 Run an OpenMC simulation with a mesh tally containing a RegularMesh filter and produce a statepoint.h5 output file.
         """
     )
     file_col2.write(
@@ -32,7 +30,7 @@ def create_regularmesh_tab():
         """
     )
     statepoint_file = file_col1.file_uploader(
-        "Upload your statepoint file", type=["h5"], key="statepoint_uploader"
+        "Upload your statepoint h5 file", type=["h5"], key="statepoint_uploader"
     )
     geometry_file = file_col2.file_uploader(
         "Upload your geometry.xml or DAGMC h5m file", type=["xml", 'hm5']
@@ -99,9 +97,20 @@ def create_regularmesh_tab():
             max_value=len(transposed_ds) - 1,
             value=int(len(transposed_ds) / 2),
         )
-        
+
+        contour_levels_str = col1.text_input(
+            "Contour levels",
+            help="Optionally add some comma deliminated contour values",
+            # value=,
+        )
+        if contour_levels_str:
+            contour_levels = sorted([float(v) for v in contour_levels_str.strip().split(',')])
+        else:
+            contour_levels = None
+            
         if geometry_file:
             save_uploadedfile(geometry_file)
+
             if geometry_file.name.endswith('xml'):
                 tree = ET.parse(geometry_file.name)
                 root = tree.getroot()
@@ -214,6 +223,15 @@ def create_regularmesh_tab():
                 extent=extent,
                 norm=norm
             )
+
+            if contour_levels_str:
+                heatmap_axes.contour(
+                    mpl_image_slice,
+                    levels=contour_levels,
+                    colors='grey',
+                    linewidths=1,
+                    extent=extent,
+                )
 
             plt.colorbar(im, label=title, ax=heatmap_axes)
 
