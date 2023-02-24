@@ -22,15 +22,7 @@ RUN pip install openmc_geometry_plot>=0.3.2
 RUN pip install regular_mesh_plotter>=0.5.3
 
 
-COPY src/openmc_plot/app.py .
-COPY src/openmc_plot/header.py .
-COPY src/openmc_plot/geometry_tab.py .
-COPY src/openmc_plot/source_tab.py .
-COPY src/openmc_plot/regularmesh_tab.py .
-COPY src/openmc_plot/weightwindows_tab.py .
-COPY src/openmc_plot/dagmcslice_tab.py .
-COPY src/openmc_plot/utils.py .
-COPY src/openmc_plot/cross_sections.xml .
+COPY src/* /
 # optional copy
 # COPY .streamlit/config.toml .streamlit/config.toml
 
@@ -38,6 +30,7 @@ ENV PORT 8501
 
 EXPOSE 8501
 
+ENV OPENMC_PLOT_LOCATION cloud
 
 # solves bug of streamlit not running in container
 # https://github.com/streamlit/streamlit/issues/4842

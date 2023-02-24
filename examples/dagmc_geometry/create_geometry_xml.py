@@ -1,4 +1,3 @@
-
 import openmc
 
 dagunv = openmc.DAGMCUniverse("dagmc_text.h5m").bounded_universe()
