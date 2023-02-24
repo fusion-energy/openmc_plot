@@ -32,7 +32,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-version = "v0.2.2"
+version = "v0.3.0"
 location = os.getenv("OPENMC_PLOT_LOCATION")
 
 if location == "cloud":
