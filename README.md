@@ -1,6 +1,8 @@
-A Python app for plotting OpenMC geometry.
+A Python app for plotting OpenMC.
 
-This repository contains part of the source code for the OpenMC geometry plotting app which is part of the website [xsplot.com](http://xsplot.com)
+This repository contains the source code for the OpenMC plot.
+
+Try the web app at [http://openmc-plot.xsplot.com](http://openmc-plot.xsplot.com)
 
 This repository contains:
 - A Python [Streamlit](https://streamlit.io) based GUI 🐍
@@ -20,7 +22,9 @@ This repository contains:
 
 # Install
 
-OpenMC_plot can be install directly from the Python package index (PyPi) using pip.
+First you will need to [install OpenMC](https://docs.openmc.org/en/stable/quickinstall.html)
+
+OpenMC_plot can then be install directly from the Python package index (PyPi) using pip.
 
 ```
 pip install openmc_plot
@@ -39,8 +43,6 @@ Your default web browser should then load with the GUI.
 You will also need to have [OpenMC installed](https://docs.openmc.org/en/stable/quickinstall.html).
 
 # Run web app locally (developers)
-
-You can view the hosted version of this repository here [xsplot.com](http://xsplot.com). However you might want to host your own version locally.
 
 To host your own local version of [xsplot.com](http://xsplot.com) you will need [Docker](https://www.docker.com/) installed and then can build and run the Dockerfile
 with the following commands.

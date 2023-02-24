@@ -24,7 +24,7 @@ def header():
         """
             # OpenMC plot ```v0.2.2```
 
-            ### ⚛ A geometry plotting user interface for OpenMC.
+            ### ⚛ A plotting user interface for OpenMC.
 
             🐍 Run this app locally with Python ```pip install openmc_plot``` then run with ```openmc_plot```
 
