@@ -19,7 +19,7 @@ RUN pip install streamlit
 RUN pip install openmc_source_plotter>=0.6.2
 RUN pip install dagmc_geometry_slice_plotter>=0.3.0
 RUN pip install openmc_geometry_plot>=0.3.2
-RUN pip install regular_mesh_plotter>=0.5.2
+RUN pip install regular_mesh_plotter>=0.5.3
 
 
 COPY src/openmc_plot/app.py .
