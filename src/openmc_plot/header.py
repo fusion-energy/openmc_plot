@@ -5,11 +5,11 @@ import os
 def header():
     """This section writes out the page header common to all tabs"""
 
-    st.set_page_config(
-        page_title="OpenMC Plot",
-        page_icon="⚛",
-        layout="wide",
-    )
+    # st.set_page_config(
+    #     page_title="OpenMC Plot",
+    #     page_icon="⚛",
+    #     layout="wide",
+    # )
 
     hide_streamlit_style = """
                 <style>
