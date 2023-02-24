@@ -82,6 +82,10 @@ def create_regularmesh_tab():
             "Divide value by mesh voxel volume", options=[True, False]
         )
         
+        value_multiple = col1.number_input(
+            "Multiplier value", value=1., help='Input a number that will be used to scale the mesh values. For example a input of 2 would double all the values.'
+        )
+        
         my_tally = statepoint.get_tally(id=int(tally_id_to_plot))
         score = my_tally.get_values(scores=[tally_score_to_plot],value =tally_or_std)
         mesh = my_tally.find_filter(filter_type=openmc.MeshFilter).mesh
@@ -153,21 +157,29 @@ def create_regularmesh_tab():
             outline_data_slice = None
 
         image_slice= mesh.slice_of_data(
-            dataset=score,
+            dataset=score,#,
             view_direction=view_direction,
             slice_index=slice_index,
             volume_normalization=volume_normalization
         )
+        
+        image_slice=image_slice*value_multiple
 
         if tally_or_std == "mean":
             cbar_label = tally_score_to_plot
         else:  # 'std dev'
             cbar_label = f"standard deviation {tally_score_to_plot}"
+        
+        title = col1.text_input(
+            "Colorbar title",
+            help="Optionally set your own colorbar label for the plot",
+            value=cbar_label,
+        )
 
 
         xlabel, ylabel = mesh.get_axis_labels(view_direction=view_direction)
 
-        log_lin_scale = col1.radio("Normalization", options=["log", "linear"])
+        log_lin_scale = col1.radio("Scale", options=["log", "linear"])
         if log_lin_scale == "linear":
             norm = None
         else:
@@ -203,7 +215,7 @@ def create_regularmesh_tab():
                 norm=norm
             )
 
-            plt.colorbar(im, label=cbar_label, ax=heatmap_axes)
+            plt.colorbar(im, label=title, ax=heatmap_axes)
 
             if outline_data_slice is not None:
                 levels = np.unique(
