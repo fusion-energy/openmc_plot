@@ -52,56 +52,20 @@ if location == "cloud":
             📧 Email feedback to mail@jshimwell.com
         """
     )
+else:
+    st.write(
+        f"""
+            # OpenMC plot ```{version}```
 
-st.write(
-    f"""
-        # OpenMC plot ```{version}```
+            ### A plotting tool for OpenMC.
+            
+            👈 Select a plotting app from the sidebar on the left to get started.
 
-        ### A plotting tool for OpenMC.
-        
-        👈 Select a plotting app from the sidebar on the left to get started.
+            💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot).
 
-        💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot).
-
-        📧 Email feedback to mail@jshimwell.com
-        
-        ⭐ If you like this project we appreciate a star on the [GitHub repository](https://github.com/fusion-energy/openmc_plot/stargazers).
-    """
-)
+            📧 Email feedback to mail@jshimwell.com
+            
+            ⭐ If you like this project we appreciate a star on the [GitHub repository](https://github.com/fusion-energy/openmc_plot/stargazers).
+        """
+    )
 st.write("<br>", unsafe_allow_html=True)
-
-
-# def main():
-    
-
-#     header()
-
-#     (
-#         # geometry_tab,
-#         dagmcslice_tab,
-#         source_tab,
-#         regularmesh_tab,
-#         weightwindow_tab,
-#     ) = st.tabs(
-#         [
-#             # "🖼 Geometry plot",
-#             "🍕 DAGMC Slice Plot",
-#             "✴️ Source Plot",
-#             "🧊 Regular Mesh Plot",
-#             "🪟 Weight Windows Plot",
-#         ]
-#     )
-#     # with geometry_tab:
-#     #     create_geometry_tab()
-#     with dagmcslice_tab:
-#         create_dagmcslice_tab()
-#     with source_tab:
-#         create_source_tab()
-#     with regularmesh_tab:
-#         create_regularmesh_tab()
-#     with weightwindow_tab:
-#         create_weightwindow_tab()
-
-
-# if __name__ == "__main__":
-#     main()
