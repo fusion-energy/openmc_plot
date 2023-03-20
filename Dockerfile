@@ -17,7 +17,7 @@ RUN pip install streamlit
 # see https://blog.streamlit.io/make-your-st-pyplot-interactive/
 # RUN pip install mpld3
 RUN pip install openmc_source_plotter>=0.6.2
-RUN pip install dagmc_geometry_slice_plotter>=0.3.0
+RUN pip install dagmc_geometry_slice_plotter>=0.3.1
 RUN pip install openmc_geometry_plot>=0.3.4
 RUN pip install regular_mesh_plotter>=0.5.3
 
