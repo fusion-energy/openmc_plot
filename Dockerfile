@@ -10,7 +10,7 @@
 
 FROM continuumio/miniconda3:4.12.0
 
-RUN conda install -c conda-forge openmc
+RUN conda install -c conda-forge openmc==0.13.3
 
 RUN pip install streamlit
 # Could be used to make mpl interactive
@@ -20,6 +20,7 @@ RUN pip install openmc_source_plotter>=0.6.2
 RUN pip install dagmc_geometry_slice_plotter>=0.3.1
 RUN pip install openmc_geometry_plot>=0.3.4
 RUN pip install regular_mesh_plotter>=0.5.3
+RUN pip install openmc_depletion_plotter>=0.3.1
 
 
 COPY src/* /
