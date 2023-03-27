@@ -21,6 +21,7 @@ RUN pip install dagmc_geometry_slice_plotter>=0.3.1
 RUN pip install openmc_geometry_plot>=0.3.4
 RUN pip install regular_mesh_plotter>=0.5.3
 RUN pip install openmc_depletion_plotter>=0.3.1
+RUN pip openmc_cylindrical_mesh_plotter>=0.1.2
 
 
 COPY src/* /

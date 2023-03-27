@@ -28,6 +28,7 @@ dependencies = [
     "openmc_geometry_plot>=0.3.4",
     "regular_mesh_plotter>=0.5.3",
     "openmc_depletion_plotter>=0.3.1",
+    "openmc_cylindrical_mesh_plotter>=0.1.2",
 ]
 dynamic = ["version"]
 
