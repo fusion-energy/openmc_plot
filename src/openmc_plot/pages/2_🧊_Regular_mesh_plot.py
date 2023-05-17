@@ -7,13 +7,13 @@ from pylab import *
 from matplotlib.colors import LogNorm
 import plotly.graph_objects as go
 import numpy as np
-import regular_mesh_plotter as rmp
+import regular_mesh_plotter
 import xml.etree.ElementTree as ET
 
 
 st.write(
-    """
-    This tab makes use of the 🐍 Python package ```regular_mesh_plotter``` which is available on [GitHub](https://github.com/fusion-energy/regular_mesh_plotter).
+    f"""
+    This tab makes use of the 🐍 Python package ```regular_mesh_plotter v{regular_mesh_plotter.__version__}``` which is available on [GitHub](https://github.com/fusion-energy/regular_mesh_plotter).
     """
 )
 
@@ -50,7 +50,6 @@ if statepoint_file == None:
         """
     )
 else:
-
     save_uploadedfile(statepoint_file)
 
     # loads up the output file from the simulation
@@ -58,7 +57,7 @@ else:
 
     # finds all the tallies that have a regular mesh and gets their ID,
     # score and mesh ID. These are used to make the "tally to plot" dropdown
-    tally_description = rmp.get_regularmesh_tallies_and_scores(statepoint)
+    tally_description = regular_mesh_plotter.get_regularmesh_tallies_and_scores(statepoint)
     tally_description_str = [
         f"ID={td['id']} score={td['score']} name={td['name']}"
         for td in tally_description
@@ -74,7 +73,9 @@ else:
         label="Slice plane", options=("x", "y", "z"), index=0
     )
 
-    tally_or_std = st.sidebar.radio("Tally mean or std dev", options=["mean", "std_dev"])
+    tally_or_std = st.sidebar.radio(
+        "Tally mean or std dev", options=["mean", "std_dev"]
+    )
     volume_normalization = st.sidebar.radio(
         "Divide value by mesh voxel volume", options=[True, False]
     )
@@ -206,11 +207,8 @@ else:
         mpl_image_slice = np.flipud(image_slice)
         plotly_image_slice = image_slice
 
-    col_mpl, col_plotly = st.tabs(
-        ["📉 MatplotLib image", "📈 Plotly interactive plot"]
-    )
+    col_mpl, col_plotly = st.tabs(["📉 MatplotLib image", "📈 Plotly interactive plot"])
     with col_mpl:
-
         heatmap_axes = plt.subplot(1, 1, 1)
 
         (xlabel, ylabel) = mesh.get_axis_labels(view_direction=view_direction)
@@ -257,7 +255,6 @@ else:
         col_mpl.pyplot(plt)
 
     with col_plotly:
-
         # plotly does not fully support log heatmaps so z values are logged
         # docs on heatmaps
         # https://plotly.github.io/plotly.py-docs/generated/plotly.graph_objects.Heatmap.html
@@ -268,8 +265,7 @@ else:
                     z=np.log(plotly_image_slice),
                     colorscale="viridis",
                     x0=extent[0],
-                    dx=abs(extent[0] - extent[1])
-                    / (len(plotly_image_slice[0]) - 1),
+                    dx=abs(extent[0] - extent[1]) / (len(plotly_image_slice[0]) - 1),
                     y0=extent[2],
                     dy=abs(extent[2] - extent[3]) / (len(plotly_image_slice) - 1),
                     showscale=False,  # avoids the color bar not being log scale
@@ -281,8 +277,7 @@ else:
                     z=plotly_image_slice,
                     colorscale="viridis",
                     x0=extent[0],
-                    dx=abs(extent[0] - extent[1])
-                    / (len(plotly_image_slice[0]) - 1),
+                    dx=abs(extent[0] - extent[1]) / (len(plotly_image_slice[0]) - 1),
                     y0=extent[2],
                     dy=abs(extent[2] - extent[3]) / (len(plotly_image_slice) - 1),
                     colorbar=dict(title=dict(side="right", text=cbar_label)),

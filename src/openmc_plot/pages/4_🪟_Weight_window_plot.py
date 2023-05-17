@@ -8,7 +8,6 @@ import xml.etree.ElementTree as ET
 from matplotlib.colors import LogNorm
 
 
-
 st.write(
     """
         👉 Create your ```openmc.WeightWindows()``` and export the settings xml file using ```export_to_xml()```.
@@ -29,7 +28,6 @@ if settings_xml_file == None:
         """
     )
 else:
-
     save_uploadedfile(settings_xml_file)
 
     my_settings = openmc.Settings.from_xml(settings_xml_file.name)
@@ -37,13 +35,13 @@ else:
     weight_windows = my_settings.weight_windows
 
     if weight_windows == []:
-
         msg = f"{settings_xml_file.name} does not contain weight windows"
-        new_title = f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
+        new_title = (
+            f'<p style="font-family:sans-serif; color:Red; font-size: 30px;">{msg}</p>'
+        )
         st.markdown(new_title, unsafe_allow_html=True)
 
     else:
-
         weight_window_by_id = {}
         for weight_window in weight_windows:
             weight_window_by_id[weight_window.id] = weight_window
@@ -74,7 +72,6 @@ else:
         mesh = selected_weight_window.mesh
 
         if isinstance(mesh, openmc.CylindricalMesh):
-
             reshaped_tally = plotted_part_of_weight_window.reshape(
                 mesh.dimension, order="F"
             )
@@ -106,7 +103,6 @@ else:
             )
 
         elif isinstance(mesh, openmc.RegularMesh):
-
             reshaped_tally = plotted_part_of_weight_window.reshape(
                 mesh.dimension, order="F"
             )

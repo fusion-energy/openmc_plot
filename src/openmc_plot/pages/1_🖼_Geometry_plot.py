@@ -14,9 +14,7 @@ from utils import save_uploadedfile
 
 
 st.write(
-    """
-        This tab makes use of the 🐍 Python package ```openmc_geometry_plot``` which is available on [GitHub](https://github.com/fusion-energy/openmc_geometry_plot).
-    """
+    f"""This tab makes use of the 🐍 Python package ```openmc_geometry_plot v{openmc_geometry_plot.__version__}``` which is available on [GitHub](https://github.com/fusion-energy/openmc_geometry_plot)."""
 )
 file_label_col1, file_label_col2 = st.columns([1, 1])
 file_col1, file_col2 = st.columns([1, 1])
@@ -31,9 +29,7 @@ file_col2.write(
     """
 )
 
-geometry_xml_file = file_col1.file_uploader(
-    "Upload your geometry.xml", type=["xml"]
-)
+geometry_xml_file = file_col1.file_uploader("Upload your geometry.xml", type=["xml"])
 dagmc_file = file_col2.file_uploader("Upload your DAGMC h5m", type=["h5m"])
 
 my_geometry = None
@@ -57,13 +53,10 @@ if dagmc_file is None and geometry_xml_file is None:
     )
 # DAGMC route
 elif dagmc_file is not None and geometry_xml_file is not None:
-
     save_uploadedfile(dagmc_file)
     save_uploadedfile(geometry_xml_file)
 
-    bound_dag_univ = openmc.DAGMCUniverse(
-        filename=dagmc_file.name
-    ).bounded_universe()
+    bound_dag_univ = openmc.DAGMCUniverse(filename=dagmc_file.name).bounded_universe()
     my_geometry = openmc.Geometry(root=bound_dag_univ)
 
     dag_universe = my_geometry.get_dagmc_universe()
@@ -83,13 +76,10 @@ elif dagmc_file is not None and geometry_xml_file is not None:
     set_cell_names = set(all_cell_names)
 
 elif dagmc_file is not None and geometry_xml_file is None:
-
     save_uploadedfile(dagmc_file)
 
     # make a basic openmc geometry
-    bound_dag_univ = openmc.DAGMCUniverse(
-        filename=dagmc_file.name
-    ).bounded_universe()
+    bound_dag_univ = openmc.DAGMCUniverse(filename=dagmc_file.name).bounded_universe()
     my_geometry = openmc.Geometry(root=bound_dag_univ)
 
     dag_universe = my_geometry.get_dagmc_universe()
@@ -195,24 +185,36 @@ if my_geometry:
     slice_index = {"z": 2, "y": 1, "x": 0}[view_direction]
 
     if np.isinf(bb[0][x_index]) or np.isinf(bb[1][x_index]):
-        x_min = st.sidebar.number_input(label="minimum vertical axis value", key="x_min")
-        x_max = st.sidebar.number_input(label="maximum vertical axis value", key="x_max")
+        x_min = st.sidebar.number_input(
+            label="minimum vertical axis value", key="x_min"
+        )
+        x_max = st.sidebar.number_input(
+            label="maximum vertical axis value", key="x_max"
+        )
     else:
         x_min = float(bb[0][x_index])
         x_max = float(bb[1][x_index])
 
     # y axis is y values
     if np.isinf(bb[0][y_index]) or np.isinf(bb[1][y_index]):
-        y_min = st.sidebar.number_input(label="minimum vertical axis value", key="y_min")
-        y_max = st.sidebar.number_input(label="maximum vertical axis value", key="y_max")
+        y_min = st.sidebar.number_input(
+            label="minimum vertical axis value", key="y_min"
+        )
+        y_max = st.sidebar.number_input(
+            label="maximum vertical axis value", key="y_max"
+        )
     else:
         y_min = float(bb[0][y_index])
         y_max = float(bb[1][y_index])
 
     # slice axis is z
     if np.isinf(bb[0][slice_index]) or np.isinf(bb[1][slice_index]):
-        slice_min = st.sidebar.number_input(label="minimum slice value", key="slice_min")
-        slice_max = st.sidebar.number_input(label="maximum slice value", key="slice_max")
+        slice_min = st.sidebar.number_input(
+            label="minimum slice value", key="slice_min"
+        )
+        slice_max = st.sidebar.number_input(
+            label="maximum slice value", key="slice_max"
+        )
     else:
         slice_min = float(bb[0][slice_index])
         slice_max = float(bb[1][slice_index])
@@ -257,7 +259,6 @@ if my_geometry:
     )  # index 82 is tab20c
 
     if color_by == "materials":
-
         cmap = cm.get_cmap(selected_color_map, len(set_mat_ids))
         initial_hex_color = []
         for i in range(cmap.N):
@@ -335,9 +336,7 @@ if my_geometry:
                 slice_value=slice_value,
             )
 
-        (xlabel, ylabel) = my_geometry.get_axis_labels(
-            view_direction=view_direction
-        )
+        (xlabel, ylabel) = my_geometry.get_axis_labels(view_direction=view_direction)
         if outline is not None:
             # gets unique levels for outlines contour plot
             # this can be avoided if outline is the same as the color data
@@ -369,7 +368,6 @@ if my_geometry:
                 )
 
         if backend == "matplotlib":
-
             extent = my_geometry.get_plot_extent(
                 plot_left,
                 plot_right,
@@ -429,7 +427,6 @@ if my_geometry:
                     mime="image/png",
                 )
         else:
-
             data = [
                 go.Heatmap(
                     z=color_data_slice,
@@ -453,7 +450,6 @@ if my_geometry:
             ]
 
             if outline is not None:
-
                 data.append(
                     go.Contour(
                         z=outline_data_slice,
@@ -461,8 +457,7 @@ if my_geometry:
                         dx=abs(plot_left - plot_right)
                         / (len(outline_data_slice[0]) - 1),
                         y0=plot_bottom,
-                        dy=abs(plot_bottom - plot_top)
-                        / (len(outline_data_slice) - 1),
+                        dy=abs(plot_bottom - plot_top) / (len(outline_data_slice) - 1),
                         contours_coloring="lines",
                         line_width=1,
                         colorscale=[[0, "rgb(0, 0, 0)"], [1.0, "rgb(0, 0, 0)"]],
@@ -501,9 +496,5 @@ if my_geometry:
         st.write(f"Material names found {set_mat_names}")
         st.write(f"Cell IDS found {set_cell_ids}")
         st.write(f"Cell names found {set_cell_names}")
-        st.write(
-            f"Bounding box lower left x={bb[0][0]} y={bb[0][1]} z={bb[0][2]}"
-        )
-        st.write(
-            f"Bounding box upper right x={bb[1][0]} y={bb[1][1]} z={bb[1][2]}"
-        )
+        st.write(f"Bounding box lower left x={bb[0][0]} y={bb[0][1]} z={bb[0][2]}")
+        st.write(f"Bounding box upper right x={bb[1][0]} y={bb[1][1]} z={bb[1][2]}")

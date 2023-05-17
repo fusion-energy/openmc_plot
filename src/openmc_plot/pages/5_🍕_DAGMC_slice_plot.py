@@ -1,13 +1,11 @@
 import streamlit as st
 from utils import save_uploadedfile
 import openmc
-from dagmc_geometry_slice_plotter import plot_axis_slice
-
-
+import dagmc_geometry_slice_plotter
 
 st.write(
-    """
-        This tab makes use of the 🐍 Python package ```dagmc_geometry_slice_plotter``` which is available on [GitHub](https://github.com/fusion-energy/dagmc_geometry_slice_plotter).
+    f"""
+        This tab makes use of the 🐍 Python package ```dagmc_geometry_slice_plotter v{dagmc_geometry_slice_plotter.__version__}``` which is available on [GitHub](https://github.com/fusion-energy/dagmc_geometry_slice_plotter).
 
         👉 Create your ```dagmc.h5m``` file using one of the methods listed in on the [DAGMC tools discussion](https://github.com/svalinn/DAGMC/discussions/812):
     """
@@ -26,7 +24,6 @@ if dagmc_h5m_file == None:
     )
 
 else:
-
     save_uploadedfile(dagmc_h5m_file)
 
     dagunv = openmc.DAGMCUniverse(dagmc_h5m_file.name).bounded_universe()
@@ -66,7 +63,7 @@ else:
     else:
         z_offset = float((bb[0][2] + bb[1][2]) / 2)
 
-    dag_plt = plot_axis_slice(
+    dag_plt = dagmc_geometry_slice_plotter.plot_axis_slice(
         dagmc_file_or_trimesh_object=dagmc_h5m_file.name,
         view_direction=view_direction,
         plane_origin=[x_offset, y_offset, z_offset],
