@@ -6,7 +6,6 @@ from pathlib import Path
 
 
 def main():
-
     path_to_app = str(Path(openmc_plot.__path__[0]) / "app.py")
 
     # default is 200MB, this sets uplod file zise to 100GB

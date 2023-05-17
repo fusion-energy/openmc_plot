@@ -3,7 +3,6 @@ import openmc
 
 
 def make_pretend_mats(set_mat_ids):
-
     my_mats = openmc.Materials()
     for mat_id in set_mat_ids:
         new_mat = openmc.Material()
