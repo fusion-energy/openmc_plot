@@ -57,7 +57,9 @@ else:
 
     # finds all the tallies that have a regular mesh and gets their ID,
     # score and mesh ID. These are used to make the "tally to plot" dropdown
-    tally_description = regular_mesh_plotter.get_regularmesh_tallies_and_scores(statepoint)
+    tally_description = regular_mesh_plotter.get_regularmesh_tallies_and_scores(
+        statepoint
+    )
     tally_description_str = [
         f"ID={td['id']} score={td['score']} name={td['name']}"
         for td in tally_description
