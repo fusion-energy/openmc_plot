@@ -1,11 +1,11 @@
 import streamlit as st
 from utils import save_uploadedfile
 import openmc
-from openmc_depletion_plotter import main
+import openmc_depletion_plotter
 
 st.write(
-    """
-        This tab makes use of the 🐍 Python package [openmc_depletion_plottter](https://github.com/fusion-energy/openmc_depletion_plottter) which is available on GitHub.
+    f"""
+        This tab makes use of the 🐍 Python package ```openmc_depletion_plottter {openmc_depletion_plotter.__version__}``` which is available on [GitHub](https://github.com/fusion-energy/openmc_depletion_plottter).
     """
 )
-main()
+openmc_depletion_plotter.main()

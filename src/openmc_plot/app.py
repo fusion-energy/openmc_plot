@@ -17,9 +17,7 @@ st.set_page_config(
 )
 
 
-
 st.sidebar.success("Select a plot above.")
-
 
 
 hide_streamlit_style = """
