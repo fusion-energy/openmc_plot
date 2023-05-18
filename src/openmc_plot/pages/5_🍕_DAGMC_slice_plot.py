@@ -1,6 +1,7 @@
 import streamlit as st
 from utils import save_uploadedfile
 import openmc
+import dagmc_geometry_slice_plotter
 from dagmc_geometry_slice_plotter import main
 
 st.write(
