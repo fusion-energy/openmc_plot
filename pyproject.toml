@@ -24,9 +24,11 @@ classifiers = [
 dependencies = [
     "streamlit",
     "openmc_source_plotter>=0.6.2",
-    "dagmc_geometry_slice_plotter>=0.3.0",
-    "openmc_geometry_plot>=0.3.4",
+    "dagmc_geometry_slice_plotter>=0.3.1",
+    "openmc_geometry_plot>=0.3.5",
     "regular_mesh_plotter>=0.5.3",
+    "openmc_depletion_plotter>=0.3.1",
+    "openmc_cylindrical_mesh_plotter>=0.1.2",
 ]
 dynamic = ["version"]
 

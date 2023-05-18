@@ -20,6 +20,9 @@ This repository contains:
 # Plot weight windows
 ![openmc plot mesh](https://canada1.discourse-cdn.com/free1/uploads/openmc/original/2X/1/114aeb91172c7577e9231ffe30edf141678d26f6.gif)
 
+# Plot cylindrical mesh tallies
+![openmc cylinder mesh plot GUI](https://user-images.githubusercontent.com/8583900/228016577-d5d9f541-1b4d-4d9b-a207-f3f1d08e27a8.gif)
+
 # Install
 
 First you will need to [install OpenMC](https://docs.openmc.org/en/stable/quickinstall.html)
