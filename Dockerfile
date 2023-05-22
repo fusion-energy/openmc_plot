@@ -12,16 +12,15 @@ FROM continuumio/miniconda3:4.12.0
 
 RUN conda install -c conda-forge openmc==0.13.3
 
-RUN pip install streamlit
 # Could be used to make matplotlib in streamlit interactive
 # see https://blog.streamlit.io/make-your-st-pyplot-interactive/
 # RUN pip install mpld3
-RUN pip install openmc_source_plotter>=0.6.2
-RUN pip install dagmc_geometry_slice_plotter>=0.3.1
-RUN pip install openmc_geometry_plot>=0.3.5
-RUN pip install regular_mesh_plotter>=0.5.3
-RUN pip install openmc_depletion_plotter>=0.3.1
-RUN pip install openmc_cylindrical_mesh_plotter>=0.1.2
+RUN pip install "openmc_source_plotter>=0.6.2"
+RUN pip install "dagmc_geometry_slice_plotter>=0.3.1"
+RUN pip install "openmc_geometry_plot>=0.3.5"
+RUN pip install "regular_mesh_plotter>=0.5.3"
+RUN pip install "openmc_depletion_plotter>=0.3.1"
+RUN pip install "openmc_cylindrical_mesh_plotter>=0.1.2"
 
 
 COPY src/* /
