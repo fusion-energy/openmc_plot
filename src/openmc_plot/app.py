@@ -30,7 +30,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-version = "v0.3.0"
+version = "v0.3.1"
 location = os.getenv("OPENMC_PLOT_LOCATION")
 
 if location == "cloud":
@@ -44,10 +44,8 @@ if location == "cloud":
             
             ### 🐍 Install with Python ```pip install openmc_plot``` then run with ```openmc_plot```
 
-
             💾 Raise a feature request, report and issue or make a contribution on [GitHub](https://github.com/fusion-energy/openmc_plot)
 
-            📧 Email feedback to mail@jshimwell.com
         """
     )
 else:

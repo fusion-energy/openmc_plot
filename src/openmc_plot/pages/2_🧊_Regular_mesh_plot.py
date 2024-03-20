@@ -7,13 +7,13 @@ from pylab import *
 from matplotlib.colors import LogNorm
 import plotly.graph_objects as go
 import numpy as np
-import regular_mesh_plotter
+import openmc_regular_mesh_plotter
 import xml.etree.ElementTree as ET
 
 
 st.write(
     f"""
-    This tab makes use of the 🐍 Python package ```regular_mesh_plotter v{regular_mesh_plotter.__version__}``` which is available on [GitHub](https://github.com/fusion-energy/regular_mesh_plotter).
+    This tab makes use of the 🐍 Python package ```openmc_regular_mesh_plotter v{openmc_regular_mesh_plotter.__version__}``` which is available on [GitHub](https://github.com/fusion-energy/regular_mesh_plotter).
     """
 )
 
